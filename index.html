@@ -8,108 +8,146 @@
   <!-- MSAL -->
   <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
 
-  <!-- Visual style inspired by paramantra.com -->
   <style>
-    :root{
-      --primary:#0f56d3;
-      --primary-600:#155bdc;
-      --muted:#6b7280;
-      --card:#ffffff;
-      --bg:#f3f6fb;
-      --accent:#10b981;
-      --shadow: 0 12px 30px rgba(19,38,77,0.08);
-      --radius:12px;
-      --max-width:1100px;
-      --gap:18px;
-    }
-    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial; background:linear-gradient(180deg,#f8fbff 0%,var(--bg) 100%); color:#1f2937;}
-    .wrap{max-width:var(--max-width);margin:36px auto;padding:28px;box-sizing:border-box;}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;}
-    header{display:flex;align-items:center;gap:16px;margin-bottom:18px;}
-    .brand{display:flex;flex-direction:column;}
-    .brand .title{font-size:28px;font-weight:700;color:var(--primary);letter-spacing:0.2px}
-    .brand .tag{color:var(--muted);font-size:13px}
-    .user-bar{margin-left:auto;display:flex;gap:12px;align-items:center}
-    .btn{background:var(--primary);color:white;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600}
-    .btn.secondary{background:#eef6ff;color:var(--primary);border:1px solid rgba(15,86,211,0.08)}
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f3f6fb}
+    .card{max-width:800px;margin:50px auto;padding:30px;background:#fff;
+          border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+    h1{color:#0f56d3;margin:0 0 10px}
+    .tag{color:#6b7280;margin-bottom:20px}
+    .btn{background:#0f56d3;color:#fff;padding:10px 18px;border:0;
+         border-radius:6px;cursor:pointer;font-weight:600}
     .btn.danger{background:#dc2626}
-    .grid{display:grid;grid-template-columns:1fr 360px;gap:var(--gap);align-items:start}
-    @media (max-width:980px){.grid{grid-template-columns:1fr}}
-    .panel{padding:18px;background:#fbfdff;border-radius:10px;border:1px solid rgba(15,86,211,0.04)}
-    label{display:block;font-weight:600;margin-bottom:8px;color:#0b1220}
-    input[type=text], textarea, select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef9;background:white;font-size:14px;box-sizing:border-box}
-    textarea{min-height:120px;resize:vertical}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media (max-width:700px){.form-row{grid-template-columns:1fr}}
-    .small{font-size:13px;color:var(--muted)}
-    .result-card{margin-top:14px;padding:16px;background:white;border-radius:10px;border:1px solid rgba(15,86,211,0.04)}
-    pre{white-space:pre-wrap;font-family:inherit;line-height:1.45}
-    .actions{display:flex;gap:12px;align-items:center;margin-top:12px}
-    .pill{display:inline-block;padding:6px 10px;background:#f1f5f9;border-radius:999px;color:#334155;font-weight:600;font-size:13px}
-    .note{font-size:13px;color:var(--muted);margin-top:8px}
     .hidden{display:none}
-    .error{background:#fff4f4;border:1px solid #f5c2c2;color:#9b1c1c;padding:10px;border-radius:8px;margin-top:10px}
+    label{font-weight:600;margin-top:12px;display:block}
+    input,textarea{width:100%;padding:8px;margin-top:4px;
+                   border:1px solid #ccc;border-radius:6px}
+    textarea{resize:vertical}
+    .result{margin-top:20px;padding:15px;background:#f9fafb;border:1px solid #e5e7eb;
+            border-radius:6px;white-space:pre-wrap}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <header>
-        <div class="brand">
-          <div class="title">Paramantra Script Generator</div>
-          <div class="tag">When probability meets structure, your data starts to think</div>
-        </div>
+  <div class="card">
+    <h1>Paramantra Script Generator</h1>
+    <div class="tag">When probability meets structure, your data starts to think</div>
 
-        <div class="user-bar">
-          <div id="signedOutControls">
-            <button id="loginBtn" class="btn">Sign in with Microsoft</button>
-          </div>
+    <!-- Signed out view -->
+    <div id="signedOut">
+      <button id="loginBtn" class="btn">Sign in with Microsoft</button>
+    </div>
 
-          <div id="signedInControls" class="hidden" style="align-items:center;">
-            <div style="text-align:right">
-              <div id="userName" style="font-weight:700"></div>
-              <div id="userEmail" class="small"></div>
-            </div>
-            <button id="logoutBtn" class="btn danger">Sign Out</button>
-          </div>
-        </div>
-      </header>
+    <!-- Signed in view -->
+    <div id="signedIn" class="hidden">
+      <div style="margin-bottom:15px">
+        <strong id="userName"></strong><br>
+        <span id="userEmail" style="font-size:14px;color:#555"></span><br>
+        <button id="logoutBtn" class="btn danger" style="margin-top:10px">Sign Out</button>
+      </div>
 
-      <div class="grid">
-        <!-- Main column: form + results -->
-        <div>
-          <div id="mainPanel" class="panel hidden">
-            <h3 style="margin:0 0 8px 0">Generate a Custom Cold Call Script</h3>
-            <div class="small">Fill the fields below and click Generate. The script appears immediately on this page.</div>
+      <!-- Script form -->
+      <div id="formPanel">
+        <label>Prospect Name</label>
+        <input id="prospectName" type="text">
 
-            <div style="margin-top:14px">
-              <div class="form-row">
-                <div>
-                  <label for="prospectName">Prospect name</label>
-                  <input id="prospectName" type="text" placeholder="e.g., Jordan Blake">
-                </div>
-                <div>
-                  <label for="company">Company</label>
-                  <input id="company" type="text" placeholder="e.g., Summit Roofing">
-                </div>
-              </div>
+        <label>Company</label>
+        <input id="company" type="text">
 
-              <div class="form-row" style="margin-top:12px">
-                <div>
-                  <label for="title">Title / Role</label>
-                  <input id="title" type="text" placeholder="e.g., Head of Operations">
-                </div>
-                <div>
-                  <label for="industry">Industry / Vertical</label>
-                  <input id="industry" type="text" placeholder="e.g., Commercial Roofing">
-                </div>
-              </div>
+        <label>Title / Role</label>
+        <input id="title" type="text">
 
-              <div style="margin-top:12px">
-                <label for="painPoints">Primary pain points <span class="small">(comma separated)</span></label>
-                <textarea id="painPoints" placeholder="e.g., field connectivity, low adoption, manual invoicing"></textarea>
-              </div>
+        <label>Industry</label>
+        <input id="industry" type="text">
 
-              <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
-                <button id="generateBtn" class="btn">Generate Script</button>
-                <div id="loading" class="pill hidden
+        <label>Pain Points (comma separated)</label>
+        <textarea id="painPoints"></textarea>
+
+        <button id="generateBtn" class="btn" style="margin-top:15px">Generate Script</button>
+      </div>
+
+      <!-- Script output -->
+      <div id="resultArea" class="result hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    // MSAL config
+    const msalConfig = {
+      auth: {
+        clientId: "e9739aed-38bc-4937-a166-df136fa59c5c",
+        authority: "https://login.microsoftonline.com/847b3797-657d-4cf9-8583-5ca191fabede",
+        redirectUri: "https://ankitmathur9.github.io/Paramantra/"
+      }
+    };
+    const loginRequest = { scopes: ["User.Read"] };
+    const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginBtn = document.getElementById('loginBtn');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const signedOut = document.getElementById('signedOut');
+      const signedIn = document.getElementById('signedIn');
+      const userName = document.getElementById('userName');
+      const userEmail = document.getElementById('userEmail');
+      const generateBtn = document.getElementById('generateBtn');
+      const resultArea = document.getElementById('resultArea');
+
+      // Handle redirect
+      msalInstance.handleRedirectPromise().then((response) => {
+        if (response && response.account) {
+          msalInstance.setActiveAccount(response.account);
+        }
+        const account = msalInstance.getActiveAccount();
+        if (account) {
+          showSignedIn(account);
+        }
+      });
+
+      // Sign in
+      loginBtn.addEventListener('click', () => {
+        console.log("Login button clicked");
+        msalInstance.loginRedirect(loginRequest);
+      });
+
+      // Sign out
+      logoutBtn.addEventListener('click', () => {
+        const account = msalInstance.getActiveAccount();
+        if (account) {
+          msalInstance.logoutRedirect({ account });
+        }
+      });
+
+      // Show signed in
+      function showSignedIn(account) {
+        signedOut.classList.add('hidden');
+        signedIn.classList.remove('hidden');
+        userName.textContent = account.name || "";
+        userEmail.textContent = account.username || "";
+      }
+
+      // Script generation
+      generateBtn.addEventListener('click', () => {
+        const prospect = document.getElementById('prospectName').value.trim() || "your prospect";
+        const company = document.getElementById('company').value.trim() || "the company";
+        const title = document.getElementById('title').value.trim() || "the team";
+        const industry = document.getElementById('industry').value.trim() || "your industry";
+        const pains = document.getElementById('painPoints').value.trim() || "common challenges";
+
+        const script = `Opening:
+Hello ${prospect}, this is ${msalInstance.getActiveAccount()?.name || "a consultant"} from Paramantra.
+
+Qualify:
+I often hear ${pains} are slowing down ${title} at ${company}. Is that your experience?
+
+Value:
+Paramantra is designed for ${industry} teams to cut manual work and boost adoption. Our clients see measurable gains within weeks.
+
+Close:
+Would it make sense to schedule a 20-minute Factory Visit demo next week?`;
+
+        resultArea.textContent = script;
+        resultArea.classList.remove('hidden');
+      });
+    });
+  </script>
+</body>
+</html>
