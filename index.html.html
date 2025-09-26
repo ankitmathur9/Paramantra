@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramantra Script Generator - Microsoft Enhanced</title>
+    <!-- Load MSAL from Microsoft's official CDN - this is reliable and works without integrity check for simplicity -->
+    <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 100%; max-width: 900px; margin: 20px; }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .logo { font-size: 2rem; font-weight: bold; color: #2563eb; margin-bottom: 0.5rem; }
+        .subtitle { color: #6b7280; font-size: 1.1rem; }
+        .login-section, .main-app { display: none; }
+        .login-section.active, .main-app.active { display: block; }
+        .login-card { text-align: center; padding: 2rem; border: 2px dashed #e5e7eb; border-radius: 10px; margin-top: 2rem; }
+        .btn { background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; margin: 0.5rem; }
+        .btn:hover { background: #1d4ed8; transform: translateY(-2px); }
+        .btn:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { margin-bottom: 0.5rem; font-weight: 600; color: #374151; }
+        input { padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 1rem; transition: border-color 0.3s ease; }
+        input:focus { outline: none; border-color: #2563eb; }
+        .user-info { background: #f3f4f6; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .microsoft-badge { background: #0078d4; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; margin-left: 1rem; }
+        .loading { text-align: center; padding: 2rem; display: none; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .results { margin-top: 2rem; padding: 1.5rem; background: #f9fafb; border-radius: 10px; border-left: 4px solid #10b981; display: none; }
+        .script-section { margin-bottom: 2rem; padding: 1rem; background: white; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .script-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: #1f2937; }
+        .script-content { white-space: pre-wrap; line-height: 1.6; color: #374151; }
+        .copy-btn { background: #10b981; font-size: 0.9rem; padding: 8px 16px; margin-top: 1rem; }
+        .copy-btn:hover { background: #059669; }
+        .ai-source { background: #eff6ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; color: #1e40af; }
+        .error { background: #fee2e2; color: #dc2626; padding: 1rem; border-radius: 8px; margin: 1rem 0; display: none; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .container { margin: 10px; padding: 1rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Paramantra Script Generator</div>
+            <div class="subtitle">AI-Powered with Microsoft Integration</div>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="login-section active">
+            <div class="login-card">
+                <h3>Microsoft Authentication Required</h3>
+                <p style="margin: 1rem 0; color: #6b7280;">Sign in with your Microsoft 365 Business Basic account</p>
+                <button id="loginBtn" class="btn">Sign In with Microsoft</button>
+            </div>
+        </div>
+
+        <!-- Main Application -->
+        <div id="mainApp" class="main-app">
+            <div class="user-info">
+                <div>
+                    <strong>Welcome, <span id="userName"></span></strong>
+                    <span class="microsoft-badge">Microsoft Authenticated</span>
+                    <br><small id="userEmail"></small>
+                </div>
+                <button id="logoutBtn" class="btn" style="background: #dc2626;">Sign Out</button>
+            </div>
+
+            <div class="ai-source">
+                <strong>AI Engine:</strong> <span id="aiEngine">Simulated Mode (Azure Setup Next)</span>
+            </div>
+
+            <!-- Prospect Form -->
+            <form id="scriptForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstName">Prospect First Name *</label>
+                        <input type="text" id="firstName" required placeholder="e.g., John">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Prospect Last Name *</label>
+                        <input type="text" id="lastName" required placeholder="e.g., Smith">
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Company Name *</label>
+                        <input type="text" id="company" required placeholder="e.g., Acme Corp">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Prospect Title/Role *</label>
+                        <input type="text" id="title" required placeholder="e.g., VP of Sales">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="industry">Industry/Vertical</label>
+                        <input type="text" id="industry" placeholder="e.g., Manufacturing, Healthcare, SaaS">
+                    </div>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; padding: 15px; font-size: 1.1rem;">Generate Scripts</button>
+            </form>
+
+            <!-- Loading -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Generating scripts...</p>
+            </div>
+
+            <!-- Results -->
+            <div id="results" class="results">
+                <div id="researchSummary" class="ai-source"></div>
+                <div class="script-section">
+                    <div class="script-title">Cold Call Script</div>
+                    <div id="coldCallScript" class="script-content"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('coldCallScript', this)">Copy Script</button>
+                </div>
+                <div class="script-section">
+                    <div class="script-title">Cold Email Script</div>
+                    <div id="coldEmailScript" class="script-content"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('coldEmailScript', this)">Copy Email</button>
+                </div>
+                <button type="button" onclick="resetForm()" class="btn" style="background: #6b7280; width: 100%; margin-top: 1rem;">Generate New Script</button>
+            </div>
+
+            <!-- Error -->
+            <div id="errorMessage" class="error"></div>
+        </div>
+    </div>
+
+    <script>
+        // Check if MSAL loaded
+        if (typeof msal === 'undefined') {
+            document.body.innerHTML = '<div style="text-align:center; padding:20px; color:red;">Error: MSAL library failed to load. Check internet and refresh.</div>';
+        }
+
+        // Placeholder config - We'll update this in Step 4
+        const msalConfig = {
+            auth: {
+                clientId: "e9739aed-38bc-4937-a166-df136fa59c5c", // Replace after Step 2
+                authority: "https://login.microsoftonline.com/847b3797-657d-4cf9-8583-5ca191fabede",
+                redirectUri: window.location.origin
+            },
+            cache: { cacheLocation: "sessionStorage", storeAuthStateInCookie: false }
+        };
+
+        let msalInstance, currentUser  = null;
+
+        async function initializeApp() {
+            try {
+                msalInstance = new msal.PublicClientApplication(msalConfig);
+                await msalInstance.initialize();
+                const accounts = msalInstance.getAllAccounts();
+                if (accounts.length > 0) {
+                    currentUser  = accounts[0];
+                    showMainApp();
+                } else {
+                    showLoginSection();
+                }
+            } catch (error) {
+                console.error(error);
+                showError("App init failed. Use placeholder client ID for now.");
+                showMainApp(); // Show UI anyway for testing
+            }
+        }
+
+        async function signIn() {
+            try {
+                const loginRequest = { scopes: ["User.Read"] };
+                const response = await msalInstance.loginPopup(loginRequest);
+                currentUser  = response.account;
+                showMainApp();
+            } catch (error) {
+                console.error(error);
+                showError("Login failed. Make sure you're using a valid Microsoft 365 account.");
+            }
+        }
+
+        function signOut() {
+            msalInstance.logoutPopup();
+            currentUser  = null;
+            showLoginSection();
+        }
+
+        function showLoginSection() {
+            document.getElementById('loginSection').classList.add('active');
+            document.getElementById('mainApp').classList.remove('active');
+        }
+
+        function showMainApp() {
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('mainApp').classList.add('active');
+            if (currentUser ) {
+                document.getElementById('userName').textContent = currentUser .name || 'User ';
+                document.getElementById('userEmail').textContent = currentUser .username || '';
+            }
+        }
+
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = message;
+            el.style.display = 'block';
+        }
+
+        function copyToClipboard(id, btn) {
+            const text = document.getElementById(id).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const original = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#059669';
+                setTimeout(() => { btn.textContent = original; btn.style.background = '#10b981'; }, 2000);
+            }).catch(() => alert('Copy failed'));
+        }
+
+        function resetForm() {
+            document.getElementById('scriptForm').reset();
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Simulated generation (replace with Azure in Step 4)
+        async function generateScripts(formData) {
+            return new Promise(resolve => setTimeout(() => {
+                resolve({
+                    coldCall: `Hi ${formData.firstName}, this is [Your Name] from Paramantra. I noticed ${formData.company} is in ${formData.industry || 'your industry'}. We've helped similar companies achieve 92% CRM adoption. Would you be interested in chatting?`,
+                    coldEmail: `Subject: CRM Tips for ${formData.company}\n\nHi ${formData.firstName}, As ${formData.title} at ${formData.company}, check out Paramantra for better adoption rates.\n\nBest, [Your Name]`
+                });
+            }, 2000));
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', initializeApp);
+        document.getElementById('loginBtn')?.addEventListener('click', signIn);
+        document.getElementById('logoutBtn')?.addEventListener('click', signOut);
+        document.getElementById('scriptForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                company: document.getElementById('company').value,
+                title: document.getElementById('title').value,
+                industry: document.getElementById('industry').value
+            };
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            try {
+                const scripts = await generateScripts(formData);
+                document.getElementById('researchSummary').innerHTML = `<strong>Analysis:</strong> Processed ${formData.company} in ${formData.industry || 'general'}.`;
+                document.getElementById('coldCallScript').textContent = scripts.coldCall;
+                document.getElementById('coldEmailScript').textContent = scripts.coldEmail;
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+            } catch (error) {
+                showError('Generation failed');
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
