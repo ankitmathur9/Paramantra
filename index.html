@@ -6,13 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: Segoe UI, Arial, sans-serif; background: #f3f6fb; margin:0; padding:0; }
-    .container { max-width: 800px; width: 95%; margin: 30px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .container { max-width: 800px; width: 95%; margin: 30px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
     h1 { color: #0f56d3; font-size: 1.8rem; margin-bottom: 10px; }
     p { font-size: 1rem; margin-bottom: 10px; }
     label { display:block; font-weight:600; margin-top:12px; font-size: 1rem; }
     input, textarea { width:100%; padding:10px; margin-top:4px; border:1px solid #ccc; border-radius:6px; font-size:1rem; }
-    textarea { resize: vertical; min-height: 250px; }
+    textarea { resize: vertical; min-height: 250px; display:block; }
     button { margin-top:15px; padding:12px 20px; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:1rem; background:#0f56d3; color:#fff; width:100%; }
+    #promptContainer { overflow:hidden; transition: max-height 0.3s ease; max-height:0; margin-top:10px; }
+    #togglePrompt { background:#6b7280; margin-top:5px; }
     @media (max-width: 480px) {
       h1 { font-size: 1.5rem; }
       button { padding: 14px; font-size: 1rem; }
@@ -44,10 +46,12 @@
 
     <button onclick="createPrompt()">Create Prompt</button>
 
-    <label>Generated Prompt (Copy & Paste into your AI model)</label>
-    <textarea id="generatedPrompt" readonly></textarea>
-
-    <button onclick="copyPrompt()">Copy Prompt</button>
+    <!-- Collapsible Prompt Section -->
+    <button id="togglePrompt" onclick="togglePromptVisibility()">Show Generated Prompt</button>
+    <div id="promptContainer">
+      <textarea id="generatedPrompt" readonly></textarea>
+      <button onclick="copyPrompt()">Copy Prompt</button>
+    </div>
   </div>
 
   <script>
@@ -105,6 +109,7 @@ Body:
 [Full personalized email body here]
       `;
       document.getElementById('generatedPrompt').value = prompt.trim();
+      showPromptContainer();
     }
 
     function copyPrompt() {
@@ -112,6 +117,24 @@ Body:
       navigator.clipboard.writeText(textarea.value)
         .then(() => { alert("Prompt copied to clipboard!"); })
         .catch(err => { alert("Failed to copy prompt: " + err); });
+    }
+
+    function togglePromptVisibility() {
+      const container = document.getElementById('promptContainer');
+      const button = document.getElementById('togglePrompt');
+      if (container.style.maxHeight && container.style.maxHeight !== '0px') {
+        container.style.maxHeight = '0';
+        button.textContent = 'Show Generated Prompt';
+      } else {
+        showPromptContainer();
+      }
+    }
+
+    function showPromptContainer() {
+      const container = document.getElementById('promptContainer');
+      const button = document.getElementById('togglePrompt');
+      container.style.maxHeight = '1000px'; // large enough to show full textarea
+      button.textContent = 'Hide Generated Prompt';
     }
   </script>
 </body>
