@@ -1,153 +1,113 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Paramantra Script Generator</title>
-
-  <!-- MSAL -->
-  <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
-
+  <meta charset="utf-8">
+  <title>Paramantra AI Prompt Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f3f6fb}
-    .card{max-width:800px;margin:50px auto;padding:30px;background:#fff;
-          border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-    h1{color:#0f56d3;margin:0 0 10px}
-    .tag{color:#6b7280;margin-bottom:20px}
-    .btn{background:#0f56d3;color:#fff;padding:10px 18px;border:0;
-         border-radius:6px;cursor:pointer;font-weight:600}
-    .btn.danger{background:#dc2626}
-    .hidden{display:none}
-    label{font-weight:600;margin-top:12px;display:block}
-    input,textarea{width:100%;padding:8px;margin-top:4px;
-                   border:1px solid #ccc;border-radius:6px}
-    textarea{resize:vertical}
-    .result{margin-top:20px;padding:15px;background:#f9fafb;border:1px solid #e5e7eb;
-            border-radius:6px;white-space:pre-wrap}
+    body { font-family: Segoe UI, Arial, sans-serif; background: #f3f6fb; margin:0; padding:0; }
+    .container { max-width: 800px; margin: 50px auto; padding: 30px; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
+    h1 { color: #0f56d3; margin-bottom: 10px;}
+    label { display:block; font-weight:600; margin-top:12px; }
+    input { width:100%; padding:8px; margin-top:4px; border:1px solid #ccc; border-radius:6px; }
+    button { margin-top:15px; padding:10px 18px; border:none; border-radius:6px; cursor:pointer; font-weight:600; background:#0f56d3; color:#fff; }
+    textarea { width:100%; height:350px; margin-top:10px; padding:8px; border:1px solid #ccc; border-radius:6px; resize:vertical; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Paramantra Script Generator</h1>
-    <div class="tag">When probability meets structure, your data starts to think</div>
+  <div class="container">
+    <h1>Paramantra AI Prompt Generator</h1>
+    <p>Enter prospect details and click "Create Prompt" to generate a hyper-personalized AI prompt for Call, Voicemail, and Email scripts.</p>
+    
+    <label>Prospect First Name</label>
+    <input type="text" id="firstName" placeholder="John">
 
-    <!-- Signed out view -->
-    <div id="signedOut">
-      <button id="loginBtn" class="btn">Sign in with Microsoft</button>
-    </div>
+    <label>Prospect Last Name</label>
+    <input type="text" id="lastName" placeholder="Doe">
 
-    <!-- Signed in view -->
-    <div id="signedIn" class="hidden">
-      <div style="margin-bottom:15px">
-        <strong id="userName"></strong><br>
-        <span id="userEmail" style="font-size:14px;color:#555"></span><br>
-        <button id="logoutBtn" class="btn danger" style="margin-top:10px">Sign Out</button>
-      </div>
+    <label>Job Title</label>
+    <input type="text" id="jobTitle" placeholder="VP of Sales">
 
-      <!-- Script form -->
-      <div id="formPanel">
-        <label>Prospect Name</label>
-        <input id="prospectName" type="text">
+    <label>LinkedIn URL (if available)</label>
+    <input type="text" id="linkedinUrl" placeholder="https://www.linkedin.com/in/johndoe">
 
-        <label>Company</label>
-        <input id="company" type="text">
+    <label>Company Name</label>
+    <input type="text" id="companyName" placeholder="Acme Corp">
 
-        <label>Title / Role</label>
-        <input id="title" type="text">
+    <label>Company Website</label>
+    <input type="text" id="companyWebsite" placeholder="https://www.acmecorp.com">
 
-        <label>Industry</label>
-        <input id="industry" type="text">
+    <button onclick="createPrompt()">Create Prompt</button>
 
-        <label>Pain Points (comma separated)</label>
-        <textarea id="painPoints"></textarea>
+    <label>Generated Prompt (Copy & Paste into your AI model)</label>
+    <textarea id="generatedPrompt" readonly></textarea>
 
-        <button id="generateBtn" class="btn" style="margin-top:15px">Generate Script</button>
-      </div>
-
-      <!-- Script output -->
-      <div id="resultArea" class="result hidden"></div>
-    </div>
+    <button onclick="copyPrompt()">Copy Prompt</button>
   </div>
 
   <script>
-    // MSAL config
-    const msalConfig = {
-      auth: {
-        clientId: "e9739aed-38bc-4937-a166-df136fa59c5c",
-        authority: "https://login.microsoftonline.com/847b3797-657d-4cf9-8583-5ca191fabede",
-        redirectUri: "https://ankitmathur9.github.io/Paramantra/"
-      }
-    };
-    const loginRequest = { scopes: ["User.Read"] };
-    const msalInstance = new msal.PublicClientApplication(msalConfig);
+    function createPrompt() {
+      const firstName = document.getElementById('firstName').value.trim() || "[FIRST_NAME]";
+      const lastName = document.getElementById('lastName').value.trim() || "[LAST_NAME]";
+      const jobTitle = document.getElementById('jobTitle').value.trim() || "[JOB_TITLE]";
+      const linkedinUrl = document.getElementById('linkedinUrl').value.trim() || "[LINKEDIN_URL]";
+      const companyName = document.getElementById('companyName').value.trim() || "[COMPANY_NAME]";
+      const companyWebsite = document.getElementById('companyWebsite').value.trim() || "[COMPANY_WEBSITE]";
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const loginBtn = document.getElementById('loginBtn');
-      const logoutBtn = document.getElementById('logoutBtn');
-      const signedOut = document.getElementById('signedOut');
-      const signedIn = document.getElementById('signedIn');
-      const userName = document.getElementById('userName');
-      const userEmail = document.getElementById('userEmail');
-      const generateBtn = document.getElementById('generateBtn');
-      const resultArea = document.getElementById('resultArea');
+      const prompt = `
+You are a highly experienced Business Development AI assistant for Paramantra, a premier SaaS-based CRM provider headquartered in Charlestown, Massachusetts. Paramantra specializes in delivering highly-customized CRM solutions across multiple business verticals, improving operational efficiency, adoption, and workflow optimization.
 
-      // Handle redirect
-      msalInstance.handleRedirectPromise().then((response) => {
-        if (response && response.account) {
-          msalInstance.setActiveAccount(response.account);
-        }
-        const account = msalInstance.getActiveAccount();
-        if (account) {
-          showSignedIn(account);
-        }
-      });
+Your task is to generate hyper-personalized outbound sales content for a prospect, including:
+1. Call Script: Opening → Qualify → Value → Close
+2. Voicemail Script: ~45 seconds
+3. Email Script: Professional, personalized, ready-to-send
 
-      // Sign in
-      loginBtn.addEventListener('click', () => {
-        console.log("Login button clicked");
-        msalInstance.loginRedirect(loginRequest);
-      });
+Prospect Details:
+- First Name: ${firstName}
+- Last Name: ${lastName}
+- Job Title: ${jobTitle}
+- LinkedIn URL: ${linkedinUrl} (if available)
+- Company Name: ${companyName}
+- Company Website: ${companyWebsite}
 
-      // Sign out
-      logoutBtn.addEventListener('click', () => {
-        const account = msalInstance.getActiveAccount();
-        if (account) {
-          msalInstance.logoutRedirect({ account });
-        }
-      });
+Research & Personalization Instructions:
+1. Study the business model of the company from the website and publicly available sources.
+2. Insert specific examples from the company's operations, products, or projects.
+3. Analyze the industry segment and highlight relevant challenges/opportunities.
+4. If LinkedIn URL is unavailable, search publicly using "${firstName} ${lastName} ${companyName}".
+5. Base personalization strictly on business context; avoid personal life details.
+6. For Call and Voicemail, include measurable benefits like efficiency, adoption, workflow optimization.
+7. For Email, include subject line, 3-4 paragraphs, and a clear CTA.
+8. Continuously enrich knowledge from Paramantra.com to stay updated with latest offerings and insights.
 
-      // Show signed in
-      function showSignedIn(account) {
-        signedOut.classList.add('hidden');
-        signedIn.classList.remove('hidden');
-        userName.textContent = account.name || "";
-        userEmail.textContent = account.username || "";
-      }
+Tone & Style:
+- Professional, confident, consultative
+- Use prospect's name, title, and company naturally
+- Scripts must be ready-to-use without editing
 
-      // Script generation
-      generateBtn.addEventListener('click', () => {
-        const prospect = document.getElementById('prospectName').value.trim() || "your prospect";
-        const company = document.getElementById('company').value.trim() || "the company";
-        const title = document.getElementById('title').value.trim() || "the team";
-        const industry = document.getElementById('industry').value.trim() || "your industry";
-        const pains = document.getElementById('painPoints').value.trim() || "common challenges";
+Output Format:
+Call Script:
+[Full personalized call script here]
 
-        const script = `Opening:
-Hello ${prospect}, this is ${msalInstance.getActiveAccount()?.name || "a consultant"} from Paramantra.
+Voicemail Script:
+[Full personalized voicemail script here]
 
-Qualify:
-I often hear ${pains} are slowing down ${title} at ${company}. Is that your experience?
+Email Script:
+Subject: [Personalized subject line]
+Body:
+[Full personalized email body here]
+      `;
 
-Value:
-Paramantra is designed for ${industry} teams to cut manual work and boost adoption. Our clients see measurable gains within weeks.
+      document.getElementById('generatedPrompt').value = prompt.trim();
+    }
 
-Close:
-Would it make sense to schedule a 20-minute Factory Visit demo next week?`;
-
-        resultArea.textContent = script;
-        resultArea.classList.remove('hidden');
-      });
-    });
+    function copyPrompt() {
+      const textarea = document.getElementById('generatedPrompt');
+      textarea.select();
+      textarea.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand('copy');
+      alert("Prompt copied to clipboard!");
+    }
   </script>
 </body>
 </html>
