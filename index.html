@@ -1,141 +1,37 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Paramantra AI Prompt Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Segoe UI, Arial, sans-serif; background: #f3f6fb; margin:0; padding:0; }
-    .container { max-width: 800px; width: 95%; margin: 30px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
-    h1 { color: #0f56d3; font-size: 1.8rem; margin-bottom: 10px; }
-    p { font-size: 1rem; margin-bottom: 10px; }
-    label { display:block; font-weight:600; margin-top:12px; font-size: 1rem; }
-    input, textarea { width:100%; padding:10px; margin-top:4px; border:1px solid #ccc; border-radius:6px; font-size:1rem; }
-    textarea { resize: vertical; min-height: 250px; display:block; }
-    button { margin-top:15px; padding:12px 20px; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:1rem; background:#0f56d3; color:#fff; width:100%; }
-    #promptContainer { overflow:hidden; transition: max-height 0.3s ease; max-height:0; margin-top:10px; }
-    #togglePrompt { background:#6b7280; margin-top:5px; }
-    @media (max-width: 480px) {
-      h1 { font-size: 1.5rem; }
-      button { padding: 14px; font-size: 1rem; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Paramantra AI Prompt Generator</h1>
-    <p>Enter prospect details and click "Create Prompt" to generate a hyper-personalized AI prompt for Call, Voicemail, and Email scripts.</p>
-    
-    <label>Prospect First Name</label>
-    <input type="text" id="firstName" placeholder="John">
-
-    <label>Prospect Last Name</label>
-    <input type="text" id="lastName" placeholder="Doe">
-
-    <label>Job Title</label>
-    <input type="text" id="jobTitle" placeholder="VP of Sales">
-
-    <label>LinkedIn URL (if available)</label>
-    <input type="text" id="linkedinUrl" placeholder="https://www.linkedin.com/in/johndoe">
-
-    <label>Company Name</label>
-    <input type="text" id="companyName" placeholder="Acme Corp">
-
-    <label>Company Website</label>
-    <input type="text" id="companyWebsite" placeholder="https://www.acmecorp.com">
-
-    <button onclick="createPrompt()">Create Prompt</button>
-
-    <!-- Collapsible Prompt Section -->
-    <button id="togglePrompt" onclick="togglePromptVisibility()">Show Generated Prompt</button>
-    <div id="promptContainer">
-      <textarea id="generatedPrompt" readonly></textarea>
-      <button onclick="copyPrompt()">Copy Prompt</button>
-    </div>
+<div class="container">
+  <div style="text-align:center; margin-bottom:20px;">
+    <img src="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp" 
+         alt="Paramantra Logo" 
+         style="max-width:200px; height:auto;">
   </div>
 
-  <script>
-    function createPrompt() {
-      const firstName = document.getElementById('firstName').value.trim() || "[FIRST_NAME]";
-      const lastName = document.getElementById('lastName').value.trim() || "[LAST_NAME]";
-      const jobTitle = document.getElementById('jobTitle').value.trim() || "[JOB_TITLE]";
-      const linkedinUrl = document.getElementById('linkedinUrl').value.trim() || "[LINKEDIN_URL]";
-      const companyName = document.getElementById('companyName').value.trim() || "[COMPANY_NAME]";
-      const companyWebsite = document.getElementById('companyWebsite').value.trim() || "[COMPANY_WEBSITE]";
+  <h1>Paramantra AI Prompt Generator</h1>
+  <p>Enter prospect details and click "Create Prompt" to generate a hyper-personalized AI prompt for Call, Voicemail, and Email scripts.</p>
+  
+  <label>Prospect First Name</label>
+  <input type="text" id="firstName" placeholder="John">
 
-      const prompt = `
-You are a highly experienced Business Development AI assistant for Paramantra, a premier SaaS-based CRM provider. Paramantra specializes in delivering highly-customized CRM solutions across multiple business verticals, improving operational efficiency, adoption, and workflow optimization.
+  <label>Prospect Last Name</label>
+  <input type="text" id="lastName" placeholder="Doe">
 
-Your task is to generate hyper-personalized outbound sales content for a prospect, including:
-1. Call Script: Opening → Qualify → Value → Close
-2. Voicemail Script: ~45 seconds, concise and persuasive
-3. Email Script: Professional, personalized, ready-to-send
+  <label>Job Title</label>
+  <input type="text" id="jobTitle" placeholder="VP of Sales">
 
-Important: Do not mention Paramantra’s headquarters or office location anywhere in the scripts. Focus strictly on the prospect, their company, and the business value Paramantra delivers.
+  <label>LinkedIn URL (if available)</label>
+  <input type="text" id="linkedinUrl" placeholder="https://www.linkedin.com/in/johndoe">
 
-Prospect Details:
-- First Name: ${firstName}
-- Last Name: ${lastName}
-- Job Title: ${jobTitle}
-- LinkedIn URL: ${linkedinUrl} (if available)
-- Company Name: ${companyName}
-- Company Website: ${companyWebsite}
+  <label>Company Name</label>
+  <input type="text" id="companyName" placeholder="Acme Corp">
 
-Research & Personalization Instructions:
-1. Study the business model of the company from their website and publicly available sources.
-2. Insert specific examples from the company's operations, products, or projects.
-3. Analyze the industry segment and highlight relevant challenges or opportunities.
-4. If LinkedIn URL is unavailable, search publicly using "${firstName} ${lastName} ${companyName}".
-5. Base personalization strictly on business context; avoid personal life details.
-6. For Call and Voicemail, include measurable benefits like efficiency, adoption, workflow optimization.
-7. For Email, include subject line, 3–4 paragraphs, and a clear CTA.
-8. Continuously enrich knowledge from Paramantra.com to stay updated with latest offerings and insights.
+  <label>Company Website</label>
+  <input type="text" id="companyWebsite" placeholder="https://www.acmecorp.com">
 
-Tone & Style:
-- Professional, confident, consultative
-- Use prospect's name, title, and company naturally
-- Scripts must be ready-to-use without editing
+  <button onclick="createPrompt()">Create Prompt</button>
 
-Output Format:
-Call Script:
-[Full personalized call script here]
-
-Voicemail Script:
-[Full personalized voicemail script here]
-
-Email Script:
-Subject: [Personalized subject line]
-Body:
-[Full personalized email body here]
-      `;
-      document.getElementById('generatedPrompt').value = prompt.trim();
-      showPromptContainer();
-    }
-
-    function copyPrompt() {
-      const textarea = document.getElementById('generatedPrompt');
-      navigator.clipboard.writeText(textarea.value)
-        .then(() => { alert("Prompt copied to clipboard!"); })
-        .catch(err => { alert("Failed to copy prompt: " + err); });
-    }
-
-    function togglePromptVisibility() {
-      const container = document.getElementById('promptContainer');
-      const button = document.getElementById('togglePrompt');
-      if (container.style.maxHeight && container.style.maxHeight !== '0px') {
-        container.style.maxHeight = '0';
-        button.textContent = 'Show Generated Prompt';
-      } else {
-        showPromptContainer();
-      }
-    }
-
-    function showPromptContainer() {
-      const container = document.getElementById('promptContainer');
-      const button = document.getElementById('togglePrompt');
-      container.style.maxHeight = '1000px'; // large enough to show full textarea
-      button.textContent = 'Hide Generated Prompt';
-    }
-  </script>
-</body>
-</html>
+  <!-- Collapsible Prompt Section -->
+  <button id="togglePrompt" onclick="togglePromptVisibility()">Show Generated Prompt</button>
+  <div id="promptContainer">
+    <textarea id="generatedPrompt" readonly></textarea>
+    <button onclick="copyPrompt()">Copy Prompt</button>
+  </div>
+</div>
