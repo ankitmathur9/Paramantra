@@ -1,37 +1,205 @@
-<div class="container">
-  <div style="text-align:center; margin-bottom:20px;">
-    <img src="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp" 
-         alt="Paramantra Logo" 
-         style="max-width:200px; height:auto;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paramantra BDC Prompt Generator</title>
+  <style>
+    :root {
+      --primary: #005596; /* Paramantra blue */
+      --secondary: #f2f6fa; 
+      --accent: #00a3e0; 
+      --text: #333;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: var(--secondary);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .logo {
+      display: block;
+      margin: 20px auto;
+      max-width: 220px;
+      height: auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .primary-btn {
+      background-color: var(--primary);
+      color: white;
+      margin-right: 10px;
+    }
+
+    .primary-btn:hover {
+      background-color: #004477;
+    }
+
+    .secondary-btn {
+      background-color: #e0e0e0;
+      color: #333;
+    }
+
+    .secondary-btn:hover {
+      background-color: #ccc;
+    }
+
+    .output {
+      margin-top: 20px;
+      display: none;
+    }
+
+    textarea {
+      width: 100%;
+      height: 300px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background-color: #fff;
+      resize: none;
+    }
+
+    .copy-btn {
+      margin-top: 10px;
+      background-color: var(--accent);
+      color: white;
+    }
+
+    .copy-btn:hover {
+      background-color: #008bbf;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+      .primary-btn,
+      .secondary-btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img
+      src="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp"
+      alt="Paramantra Logo"
+      class="logo"
+    />
+    <h1>BDC Prompt Generator</h1>
+
+    <label for="prospectFirst">Prospect First Name:</label>
+    <input type="text" id="prospectFirst" />
+
+    <label for="prospectLast">Prospect Last Name:</label>
+    <input type="text" id="prospectLast" />
+
+    <label for="title">Job Title:</label>
+    <input type="text" id="title" />
+
+    <label for="linkedin">LinkedIn URL:</label>
+    <input type="text" id="linkedin" />
+
+    <label for="company">Company Name:</label>
+    <input type="text" id="company" />
+
+    <label for="website">Company Website:</label>
+    <input type="text" id="website" />
+
+    <button class="primary-btn" onclick="generatePrompt()">Create Prompt</button>
+    <button class="secondary-btn" onclick="togglePrompt()">Show/Hide Prompt</button>
+
+    <div class="output" id="output">
+      <textarea id="promptText" readonly></textarea>
+      <button class="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+    </div>
   </div>
 
-  <h1>Paramantra AI Prompt Generator</h1>
-  <p>Enter prospect details and click "Create Prompt" to generate a hyper-personalized AI prompt for Call, Voicemail, and Email scripts.</p>
-  
-  <label>Prospect First Name</label>
-  <input type="text" id="firstName" placeholder="John">
+  <script>
+    function generatePrompt() {
+      const first = document.getElementById("prospectFirst").value;
+      const last = document.getElementById("prospectLast").value;
+      const title = document.getElementById("title").value;
+      const linkedin = document.getElementById("linkedin").value;
+      const company = document.getElementById("company").value;
+      const website = document.getElementById("website").value;
 
-  <label>Prospect Last Name</label>
-  <input type="text" id="lastName" placeholder="Doe">
+      const prompt = `You are a seasoned sales AI assistant for Paramantra, a SaaS-based CRM provider. Your task is to generate hyper-personalized outbound sales content tailored for a BDC at Paramantra.
 
-  <label>Job Title</label>
-  <input type="text" id="jobTitle" placeholder="VP of Sales">
+1. Study the business model of ${company} based on ${website} and public info.
+2. Insert specific business examples to demonstrate thorough research.
+3. Always enrich yourself with content from https://paramantra.com.
 
-  <label>LinkedIn URL (if available)</label>
-  <input type="text" id="linkedinUrl" placeholder="https://www.linkedin.com/in/johndoe">
+Prospect Details:
+- Name: ${first} ${last}
+- Title: ${title}
+- LinkedIn: ${linkedin}
+- Company: ${company}
+- Website: ${website}
 
-  <label>Company Name</label>
-  <input type="text" id="companyName" placeholder="Acme Corp">
+Deliverables:
+1. Call Script (Opening → Qualify → Value → Close).
+2. Voicemail Script (~45s).
+3. Email Script (professional, concise, personalized).`;
 
-  <label>Company Website</label>
-  <input type="text" id="companyWebsite" placeholder="https://www.acmecorp.com">
+      document.getElementById("promptText").value = prompt;
+      document.getElementById("output").style.display = "block";
+    }
 
-  <button onclick="createPrompt()">Create Prompt</button>
+    function togglePrompt() {
+      const out = document.getElementById("output");
+      out.style.display = out.style.display === "none" ? "block" : "none";
+    }
 
-  <!-- Collapsible Prompt Section -->
-  <button id="togglePrompt" onclick="togglePromptVisibility()">Show Generated Prompt</button>
-  <div id="promptContainer">
-    <textarea id="generatedPrompt" readonly></textarea>
-    <button onclick="copyPrompt()">Copy Prompt</button>
-  </div>
-</div>
+    function copyPrompt() {
+      const text = document.getElementById("promptText");
+      text.select();
+      document.execCommand("copy");
+      alert("Prompt copied to clipboard!");
+    }
+  </script>
+</body>
+</html>
