@@ -3,52 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Paramantra BDC Prompt Generator</title>
+  <title>Paramantra BDC Signal-Driven Prompt Generator</title>
   
   <link rel="icon" type="image/png" href="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp">
 
   <style>
     :root{
-      /* --- PARAMANTRA BRAND COLORS (Matched to Screenshot) --- */
+      /* --- PARAMANTRA BRAND COLORS --- */
       --primary: #EA4335; /* Strong Orange-Red (Button, Focus, Brand Text) */
       --accent: #222222; /* Deep Black/Dark Gray (Headings, Text, Copy Button) */
       --bg: #f3f6fb; /* Light background for overall page */
       --card: #ffffff; /* Pure White Card Background */
-      /* ------------------------------- */
       --muted: #6b7280;
       --success: #10b981;
       --error: #ef4444;
       --max-width: 920px;
-      --radius: 16px; /* Global Radius (Enhanced) */
+      --radius: 16px; 
     }
     /* Base Styles */
     html,body{height:100%;margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:var(--accent)}
     .wrap{max-width:var(--max-width);margin:30px auto;padding:20px}
     
-    /* Card Styles (Enhanced Shadow and Radius) */
+    /* Card Styles */
     .card{
         background:var(--card);
         border-radius:var(--radius);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05); /* Deeper shadow */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05); 
         padding:28px; 
         overflow:hidden;
     }
 
-    /* Brand Header - Clean and Minimal */
+    /* Brand Header */
     .brand-section {
         margin-bottom: 24px;
         padding-bottom: 8px;
         border-bottom: 2px solid var(--primary); 
     }
-    
-    /* Logo Style */
     .brand-logo-img {
         max-height: 40px; 
         width: auto;
         display: block;
         margin-bottom: 4px;
     }
-
     .brand-slogan {
         font-size: 1.1rem;
         font-weight: 700; 
@@ -64,7 +60,9 @@
     /* Form Elements */
     .input-group{margin-bottom:18px}
     label{display:block;margin-bottom:6px;font-weight:600;color:var(--accent); font-size: 0.95rem;} 
-    input[type="text"]{
+    
+    /* Input/Select/Textarea Styling */
+    input[type="text"], select, textarea {
         width:100%;
         padding:10px 12px;
         border:1px solid #ccc;
@@ -72,8 +70,30 @@
         box-sizing:border-box;
         font-size:1rem;
         transition:border-color 0.2s, box-shadow 0.2s;
+        /* Ensure selects look consistent */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: white;
     }
-    input[type="text"]:focus{border-color:var(--primary);outline:none; box-shadow: 0 0 0 1px var(--primary);} 
+
+    /* Custom style for Select dropdown arrow */
+    select {
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23222222%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.1L146.2%20205.9%2018.8%2074.5c-6.8-6.8-17.7-6.8-24.5%200s-6.8%2017.7%200%2024.5l130.6%20131.6c6.8%206.8%2017.7%206.8%2024.5%200l130.6-131.6c6.8-6.8%206.8-17.7%200-24.5a18.6%2018.6%200%200%200-13.4-5.2z%22%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 10px top 50%;
+        background-size: 12px;
+    }
+
+    /* Textarea specific styles */
+    textarea {
+        resize: vertical;
+        min-height: 80px; 
+        font-size: 0.9rem;
+    }
+
+    input[type="text"]:focus, select:focus, textarea:focus {border-color:var(--primary);outline:none; box-shadow: 0 0 0 1px var(--primary);} 
+
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     .required::after{content:'*';color:var(--primary);margin-left:4px} 
     
@@ -96,14 +116,14 @@
     
     /* Output Area */
     .output-section{margin-top:30px;position:relative}
-    textarea{
+    #promptText{
         width:100%;height:400px;padding:15px;border:1px solid #ddd;
         border-radius:8px; 
         box-sizing:border-box;font-size:0.85rem;font-family:Consolas,monospace;
         background:#f9f9f9;resize:none;line-height:1.4;display:block;color:var(--accent)
     }
     #outputArea{transition:max-height 0.3s ease-in-out;overflow:hidden;max-height:0;display:none}
-    .btn-copy{position:absolute;top:10px;right:10px;background:var(--accent);color:var(--card);padding:5px 10px;border-radius:4px;font-size:0.8rem} 
+    .btn-copy{position:absolute;top:10px;right:10px;background:var(--accent);color:var(--card);padding:5px 10px;border-radius:4px;font-size:0.8rem; z-index: 100;} 
     .btn-copy:hover{background:#333333}
     
     /* Toast (Notification) */
@@ -112,9 +132,8 @@
     .toast.success{background:var(--success)}
     .toast.error{background:var(--error)}
 
-    /* --- Media Query for Mobile Optimization (The new addition) --- */
+    /* --- Mobile Optimization --- */
     @media (max-width: 600px) {
-        /* Forces the 2-column grid sections to stack vertically on smaller screens */
         .grid-2 {
             grid-template-columns: 1fr;
             gap: 0; 
@@ -122,7 +141,6 @@
         .input-group {
             margin-bottom: 15px; 
         }
-        /* Stack the buttons too */
         .btn-row {
             flex-direction: column;
             align-items: stretch;
@@ -133,7 +151,7 @@
             margin-top: 10px;
         }
         .wrap {
-            padding: 15px; /* Slightly less padding on tiny screens */
+            padding: 15px; 
             margin: 15px auto;
         }
     }
@@ -146,14 +164,14 @@
         <img src="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp" 
              alt="Paramantra Logo" 
              class="brand-logo-img">
-        <p class="brand-slogan">BDC Hyper-Personalization Prompt Generator</p>
+        <p class="brand-slogan">BDC Signal-Driven Hyper-Context Generator</p>
       </header>
       
-      <p style="color: var(--accent); margin-bottom: 24px;">Enter the prospect details below. The system will auto-generate a high-context prompt embedding the **Paramantra ethos**, ensuring consistent, methodology-driven content creation.</p>
+      <p style="color: var(--accent); margin-bottom: 24px;">**ATTENTION BDC:** Enter the prospect and signal details below. The system generates a high-context prompt embedding the Paramantra ethos, solution mapping, and **Signal-Based Justification**.</p>
       
       <form id="promptForm">
-        <h2>Prospect Information (Required for Personalization)</h2>
         
+        <h2>Prospect Information (Static Data)</h2>
         <div class="grid-2">
           <div class="input-group">
             <label for="firstName" class="required">First Name</label>
@@ -185,7 +203,54 @@
           <label for="companyWebsite">Company Website</label>
           <input type="text" id="companyWebsite" placeholder="https://stellarmanufacturing.com" />
         </div>
-        
+
+        <h2>Account Classification (Solution Mapping)</h2>
+        <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 20px;">Use the NORAM Functional Training matrix to select the prospect's operating model. These selections drive the module relevance.</p>
+
+        <div class="grid-2">
+            <div class="input-group">
+                <label for="marketFocus" class="required">Market Focus</label>
+                <select id="marketFocus" required>
+                    <option value="" disabled selected>Select...</option>
+                    <option value="B2B">B2B</option>
+                    <option value="B2C">B2C</option>
+                    <option value="Both">Both B2B and B2C</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="revenueFocus" class="required">Revenue Focus</label>
+                <select id="revenueFocus" required>
+                    <option value="" disabled selected>Select...</option>
+                    <option value="NCA">New Client Acquisition (NCA)</option>
+                    <option value="Existing">Existing Customer Mining</option>
+                    <option value="Both">Both NCA and Existing</option>
+                </select>
+            </div>
+        </div>
+        <div class="grid-2">
+            <div class="input-group">
+                <label for="salesModel" class="required">Sales Model</label>
+                <select id="salesModel" required>
+                    <option value="" disabled selected>Select...</option>
+                    <option value="Direct">Direct Sales Only</option>
+                    <option value="Indirect">Indirect (Channel/Distributor)</option>
+                    <option value="Both">Both Direct and Indirect</option>
+                </select>
+            </div>
+        </div>
+
+        <h2>Dynamic Prospecting Signals (High-Value Research)</h2>
+        <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 20px;">**MANDATORY INPUT.** These signals justify your call and enable the AI's hyper-context. Do not call without a signal.</p>
+
+        <div class="input-group">
+            <label for="triggerSignal" class="required">Trigger Event (Strategic/Financial)</label>
+            <textarea id="triggerSignal" placeholder="E.g., Company just announced Series C funding / New VP Sales hired / Acquired 'XYZ' Corp." required></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="painSignal" class="required">Operational Pain Signal (Intent/Tech/Hiring)</label>
+            <textarea id="painSignal" placeholder="E.g., LinkedIn shows 20+ Sales Ops openings / Mentioned migrating off Oracle ERP / Competitor failed due to lack of channel visibility." required></textarea>
+        </div>
         <div class="btn-row">
           <button type="submit" class="btn-primary">Generate AI Prompt (Ctrl+Enter)</button>
           <button type="button" class="btn-secondary" id="resetButton" onclick="resetForm()">Clear Form</button>
@@ -195,7 +260,7 @@
       <div class="output-section">
         <button id="toggleBtn" class="btn-secondary" style="margin: 16px 0 8px 0;" onclick="togglePrompt()">Show Generated Prompt</button>
         <div id="outputArea">
-          <textarea id="promptText" readonly placeholder="Your hyper-personalized prompt will appear here after clicking Generate."></textarea>
+          <textarea id="promptText" readonly placeholder="Your signal-driven, hyper-personalized prompt will appear here after clicking Generate."></textarea>
           <button class="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
         </div>
       </div>
@@ -210,8 +275,6 @@
       generatePrompt();
     });
 
-    // --- MOTHER SUPERIOR PROMPT (Zero Noise Mandate) ---
-
     // 1. DEFINE THE PARAMANTRA MANDATE (The AI's DNA)
     const PARAMANTRA_MANDATE = `
 **[SYSTEM CONTEXT: PARAMANTRA CORE MANDATE]**
@@ -222,38 +285,68 @@
 - CONDUCT (NON-NEGOTIABLE): Exhibit Dignity in Conduct. Be honest, thoughtful, and respectful. NEVER overquote, push unsuitable solutions, mislead, or put revenue need above customer's need for clarity. (Ref: Paramantra Tenets)
 
 **2. STRATEGIC POSITIONING (Extension vs. Replacement):**
-- Position Paramantra as a **Visibility and Enablement Layer** that **Extends, not Replaces**, existing core systems (e.g., SAP, Salesforce, NetSuite, Xactimate, QuickBooks).
-- Use the metaphor: "Thermal Control Module" for revenue operations—delivering precise control without altering the core drive system (Ref: AKG White Paper)
+- Position Paramantra as a **Visibility and Enablement Layer** that **Extends, not Replaces**, existing core systems (e.g., SAP, Salesforce, NetSuite).
+- Use the metaphor: "Thermal Control Module" for revenue operations—delivering precise control across sales/distributor workflows without altering the core drive system (ERP). (Ref: AKG White Paper)
 
-**3. SALES METHODOLOGY (Sandler Strict Compliance):**
+**3. SALES METHODOLOGY (Sandler Strict Compliance & Signal Integration):**
 - Path of Least Friction: Start soft, non-urgent tone. The primary call purpose is to **book another call or disqualify**. (Ref: BDC Training)
-- Pattern Interrupt: Must use the formula: "You and I don't know each other. May I take 30 seconds and tell you why I called?" (Ref: Prospecting Mindset)
+- Pattern Interrupt (UPDATED): Must use the formula: "You and I don't know each other. May I take 30 seconds and tell you why I called?" **The core reason (the Signal) must be delivered within the first 15 seconds to justify the outreach.** (Ref: Prospecting Mindset, Global Best Practice)
 - Up-Front Contract (UFC): Must be used for the next step (e.g., "If it's not a fit, we part friends and part ways with clarity").
-- Pain Funnel: Discovery questions must focus on **quantifiable impact** (e.g., cycle time, cost, slippage, personal drag).
+- Pain Funnel: Discovery questions must focus on **quantifiable impact** (e.g., cycle time, cost, slippage, personal drag) as directly related to the provided Signal.
 
-**4. CONTENT ACCURACY (Anti-Hallucination Protocol):**
+**4. MODULE RELEVANCE MAPPING (Hyper-Context Centric):**
+- The scripts and summary must prioritize Paramantra modules (e.g., Channel Partner Management, Forecasting, Service Automation) that are most relevant to the prospect's operating model (B2B/Indirect/NCA) as defined by the Account Classification.
+- **LOGIC INSTRUCTION (Ref: NORAM Functional Training):** Use the classification variables to prioritize module promotion. For example, **Indirect** models require heavy emphasis on **Channel Partner Management** and **Partner Login**. **NCA** focus requires **Digital Marketing** and **Campaign Management**.
+
+**5. SIGNAL INTEGRATION (Dynamic Relevance & Business Centricity):**
+- The **Trigger Event** and **Operational Pain** signals are the *primary justification* for this outreach.
+- The Call Script, Email, and Executive Summary **must subtly weave in the strongest signal** as the foundation of the Pain Funnel.
+- The **Executive Summary** must use the signal (e.g., New CIO, M&A) as the **central theme** for its **extremely business-centric examples** and must frame Paramantra as the solution to the revenue operation friction caused by that specific signal.
+
+**6. CONTENT ACCURACY (Anti-Hallucination Protocol):**
 - All content must be traceable to common industry practices or logical deductions from the Prospect Data.
 - **Extreme Example-Led Content:** The Executive Summary MUST adopt the strategic, analytical, and highly structured style of the AKG Strategic Whitepaper (focusing on system handoffs, revenue operation friction, and financial impact).
 
-**5. OUTPUT FORMATTING & HYGIENE (ABSOLUTE ZER0 NOISE):**
+**7. OUTPUT FORMATTING & HYGIENE (ABSOLUTE ZER0 NOISE):**
 - Strictly exclude ALL non-textual elements: NO emojis, NO icons, NO em dashes (—), NO hyphens used as long dashes. Use ONLY standard, clean punctuation (periods, commas, regular hyphens for compound words).
 - The final response MUST contain ZERO hyperlinks, URLs, citations, or references within the Call Script, Voicemail Script, Email Script, or Executive Summary sections. The content must be ready-to-use text only.
 `;
 
     // 2. GENERATE PROMPT FUNCTION (Optimized)
     function generatePrompt() {
+      // Static Prospect Data Capture
       const firstName = document.getElementById('firstName').value.trim() || '{{FIRST_NAME}}';
       const lastName = document.getElementById('lastName').value.trim() || '{{LAST_NAME}}';
       const jobTitle = document.getElementById('jobTitle').value.trim() || '{{JOB_TITLE}}';
-      const linkedinUrl = document.getElementById('linkedinUrl').value.trim() || '{{LINKEDIN_URL}}';
+      const linkedinUrl = document.getElementById('linkedinUrl').value.trim() || 'N/A';
       const companyName = document.getElementById('companyName').value.trim() || '{{COMPANY_NAME}}';
-      const companyWebsite = document.getElementById('companyWebsite').value.trim() || '{{COMPANY_WEBSITE}}';
+      const companyWebsite = document.getElementById('companyWebsite').value.trim() || 'N/A';
 
-      // Check if enough data is present for personalization
+      // Classification Data Capture
+      const marketFocus = document.getElementById('marketFocus').value.trim();
+      const revenueFocus = document.getElementById('revenueFocus').value.trim();
+      const salesModel = document.getElementById('salesModel').value.trim();
+      
+      // ** NEW SIGNAL DATA CAPTURE **
+      const triggerSignal = document.getElementById('triggerSignal').value.trim() || 'N/A';
+      const painSignal = document.getElementById('painSignal').value.trim() || 'N/A';
+
+
+      // Input Validation
       if (firstName === '{{FIRST_NAME}}' || companyName === '{{COMPANY_NAME}}' || jobTitle === '{{JOB_TITLE}}') {
-        showToast('Please enter at least First Name, Job Title, and Company Name for hyper-personalization.', 'error');
+        showToast('Please enter at least First Name, Job Title, and Company Name for personalization.', 'error');
         return;
       }
+      if (!marketFocus || !revenueFocus || !salesModel) {
+        showToast('Please select all required Account Classification fields for hyper-context mapping.', 'error');
+        return;
+      }
+      // Mandatory Signal Validation
+      if (triggerSignal === 'N/A' && painSignal === 'N/A') {
+        showToast('Please enter at least one value for the Dynamic Prospecting Signals (Trigger or Pain) as required by the new BDC process.', 'error');
+        return;
+      }
+
 
       // CONSTRUCT THE FINAL, HIGH-CONTEXT PROMPT
       const prompt = `${PARAMANTRA_MANDATE}
@@ -268,22 +361,31 @@
 - Company Website: ${companyWebsite}
 - LinkedIn URL: ${linkedinUrl}
 
-**TASK:** Generate the following five deliverables. The entire response must strictly adhere to the PARAMANTRA CORE MANDATE, especially the ABSOLUTE ZERO NOISE HYGIENE RULE.
+**ACCOUNT CLASSIFICATION (For Solution Mapping):**
+- Market Focus: ${marketFocus}
+- Revenue Focus: ${revenueFocus}
+- Sales Model: ${salesModel}
+
+**DYNAMIC PROSPECTING SIGNALS (For Urgency & Justification):**
+- Trigger Event (Strategic/Financial): ${triggerSignal}
+- Operational Pain (Intent/Hiring/Tech): ${painSignal}
+
+**TASK:** Generate the following five deliverables. The entire response must strictly adhere to the PARAMANTRA CORE MANDATE, especially the SIGNAL INTEGRATION and ABSOLUTE ZERO NOISE HYGIENE RULE.
 
 **REQUIRED OUTPUT STRUCTURE (NON-NEGOTIABLE ORDER AND HYGIENE):**
 
-1.  **CALL SCRIPT:** (2-3 minute flow. Clean, plain text. Include 2-second pause instruction.)
-2.  **VOICE MAIL SCRIPT:** (Brief, non-salesy, consultative, references core pain, soft CTA.)
+1.  **CALL SCRIPT:** (2-3 minute flow. Clean, plain text. Must use the Pattern Interrupt, deliver the Signal as the reason for the call, and end with the UFC.)
+2.  **VOICE MAIL SCRIPT:** (Brief, non-salesy, consultative, references core pain, soft CTA. NO links.)
 3.  **EMAIL SCRIPT:** (Professional, lowercase subject, empathetic body, soft exploratory CTA. NO hyperlinks.)
-4.  **EXECUTIVE SUMMARY:** (550-600 words. Strategic, analytical, Extreme Example-Led Content. Must use proper headings.)
-5.  **REFERENCES & JUSTIFICATION:** (A final section listing the Paramantra Tenets and Prospect Data elements that informed the content. This is the ONLY section permitted to list sources/justifications.)
+4.  **EXECUTIVE SUMMARY:** (550-600 words. Strategic, analytical, Extreme Example-Led Content. Must center the narrative around the Dynamic Signals.)
+5.  **REFERENCES & JUSTIFICATION:** (A final section listing the Paramantra Tenets and Prospect Data/Signal elements that informed the content. This is the ONLY section permitted to list sources/justifications.)
 
 **IMPORTANT:** Do NOT include any introductory sentences, headings, or summaries before delivering the required content in the specified order (1-5). Begin immediately with the Call Script.`;
 
       const promptText = document.getElementById('promptText');
       promptText.value = prompt;
       openOutput();
-      showToast('Prompt generated successfully! Click Copy to use.', 'success');
+      showToast('Signal-Driven Prompt generated successfully! Click Copy to use.', 'success');
     }
 
     // --- Utility Functions (Standard for UI Functionality) ---
@@ -341,12 +443,7 @@
 
     // Reset form cleanly
     function resetForm() {
-      document.getElementById('firstName').value = '';
-      document.getElementById('lastName').value = '';
-      document.getElementById('jobTitle').value = '';
-      document.getElementById('linkedinUrl').value = '';
-      document.getElementById('companyName').value = '';
-      document.getElementById('companyWebsite').value = '';
+      document.getElementById('promptForm').reset(); // Use standard reset for all inputs/selects
       promptText.value = '';
       closeOutput();
       showToast('Form cleared', 'success');
