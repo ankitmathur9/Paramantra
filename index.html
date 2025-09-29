@@ -6,7 +6,8 @@
   <title>Paramantra BDC Prompt Generator</title>
   <style>
     :root{
-      --primary: #0f56d3;
+      /* Ensure these colors match your desired theme */
+      --primary: #0f56d3; 
       --accent: #4b8fd4;
       --bg: #f3f6fb;
       --card: #ffffff;
@@ -19,12 +20,12 @@
     .wrap{max-width:var(--max-width);margin:24px auto;padding:20px}
     .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 30px rgba(15,86,211,0.08);padding:22px;overflow:hidden}
     .brand{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+    /* Restored Logo path - Adjust this if your actual path is different */
     .logo{max-height:56px;width:auto;display:block}
     h1{font-size:1.4rem;margin:0;color:var(--primary);font-weight:700}
     h2{font-size:1.2rem;color:var(--primary);margin-top:20px;padding-top:10px;border-top:1px solid #eee}
     .input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-bottom:20px}
     label{display:block;margin-bottom:6px;font-weight:600;font-size:.9rem;color:#333}
-    /* Updated input types to include url */
     input[type="text"],input[type="url"],textarea{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:var(--radius);box-sizing:border-box;font-size:1rem;transition:border-color .3s;background:#fff}
     input[type="text"]:focus,input[type="url"]:focus,textarea:focus{border-color:var(--primary);outline:none}
     .radio-group{display:flex;flex-wrap:wrap;gap:15px;margin-top:10px}
@@ -39,22 +40,22 @@
     .btn-secondary{background-color:#eee;color:#333}
     .btn-secondary:hover{background-color:#ddd}
 
-    /* Output Area show/hide logic (Max-height transition) */
+    /* Output Area show/hide logic */
     #outputArea{
         margin-top:20px;
-        max-height:0; /* Start hidden */
+        max-height:0; 
         overflow:hidden;
         transition:max-height .3s ease-in-out;
     }
     #outputArea.open{
-        max-height: 1200px; /* Target height for visible state */
+        max-height: 1200px; 
     }
 
     /* Textarea Formatting Preservation */
     #promptText{
         min-height:300px;
         font-family: monospace;
-        white-space: pre-wrap; /* CRITICAL: Preserves newlines and spaces */
+        white-space: pre-wrap; 
         font-size:.95rem;
         resize:none;
         background:#f9f9f9;
@@ -77,7 +78,7 @@
 <div class="wrap">
   <div class="card">
     <div class="brand">
-      <img src="https://i.imgur.com/K3VwBwK.png" alt="Paramantra Logo" class="logo" onerror="this.style.display='none'">
+      <img src="image_600eb2.png-adb0ea5d-be63-4dc5-b3af-0024cfae257b" alt="Paramantra Logo" class="logo" onerror="this.style.display='none'">
       <h1>Paramantra BDC Prompt Generator</h1>
     </div>
     <form id="promptForm">
@@ -86,18 +87,6 @@
         <div>
           <label for="firstName">First Name *</label>
           <input type="text" id="firstName" placeholder="e.g., Jane" required>
-        </div>
-        <div>
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" placeholder="e.g., Doe">
-        </div>
-        <div>
-          <label for="jobTitle">Job Title</label>
-          <input type="text" id="jobTitle" placeholder="e.g., VP of Sales">
-        </div>
-        <div>
-          <label for="linkedinUrl">LinkedIn URL</label>
-          <input type="url" id="linkedinUrl" placeholder="e.g., https://linkedin.com/in/janedoe">
         </div>
         <div>
           <label for="companyName">Company Name *</label>
@@ -166,7 +155,7 @@
 <div id="toast" aria-live="polite"></div>
 
 <script>
-    // --- DOM ELEMENT CACHING (Improved Organization) ---
+    // --- DOM ELEMENT CACHING ---
     const promptForm = document.getElementById('promptForm');
     const promptText = document.getElementById('promptText');
     const outputArea = document.getElementById('outputArea');
@@ -178,7 +167,6 @@
     function showToast(message) {
         toast.textContent = message;
         toast.className = "show";
-        // Sets timeout for hiding the toast
         setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 4000); 
     }
 
@@ -188,7 +176,6 @@
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(promptText.value);
         } else {
-          // Fallback for older browsers or insecure contexts (HTTP)
           promptText.select();
           promptText.setSelectionRange(0, 99999); 
           document.execCommand('copy');
@@ -201,22 +188,17 @@
     
     // --- UI/VISIBILITY FUNCTIONS ---
 
-    // Uses class toggling for smooth max-height transition
     function openOutput() {
       outputArea.classList.add('open');
     }
 
-    // Uses class toggling for smooth max-height transition
     function closeOutput() {
       outputArea.classList.remove('open');
     }
 
     function resetForm() {
-      // Clear all inputs
+      // Clear only the necessary inputs
       document.getElementById('firstName').value = '';
-      document.getElementById('lastName').value = '';
-      document.getElementById('jobTitle').value = '';
-      document.getElementById('linkedinUrl').value = '';
       document.getElementById('companyName').value = '';
       document.getElementById('companyWebsite').value = '';
       promptText.value = '';
@@ -232,10 +214,8 @@
     // --- CORE LOGIC ---
 
     function generatePrompt() {
+        // Only retrieving the necessary fields
         const firstName = document.getElementById('firstName').value.trim();
-        const lastName = document.getElementById('lastName').value.trim();
-        const jobTitle = document.getElementById('jobTitle').value.trim();
-        const linkedinUrl = document.getElementById('linkedinUrl').value.trim();
         const companyName = document.getElementById('companyName').value.trim();
         const companyWebsite = document.getElementById('companyWebsite').value.trim();
         
@@ -253,19 +233,19 @@
             return;
         }
 
-        // Template Literal for clean, multi-line prompt generation
+        // Cleaned up template literal
         let promptBody = `Act as an expert Paramantra BDC (Business Development Consultant).
 
-The prospect is **${firstName} ${lastName}** (Job Title: **${jobTitle}**) at **${companyName}** (Website: **${companyWebsite}**).
-Their LinkedIn profile is: **${linkedinUrl}**
+The prospect is **${firstName}** at **${companyName}** (Website: **${companyWebsite}**).
 
 **TASK**: Write a compelling **LinkedIn Direct Message** and an accompanying **Voicemail Script** to book a 15-minute discovery call with the prospect.
 
 **CONTEXT FOR YOU**:
-1. **Objective**: Secure a 15-minute Up Front Contract (UFC) meeting. Do not sell on the first touch.
-2. **Positioning**: Use the "**Extension, not Replacement**" approach (Paramantra extends existing systems like SAP/Salesforce without disruption).
-3. **Tone**: Use the "**Path of least friction**" and "**No rush**" tone. Start soft and be non-confrontational.
-4. **Key Hook**: Address **${painPointStr}** by positioning Paramantra as a solution for **${classificationStr}** businesses.
+1. **Objective**: Secure a 15-minute Up Front Contract (UFC) meeting. Do not sell on the first touch. (Reference: Sandler, Paramantra BDC Training)
+2. **Voicemail Tone**: Apply **Pattern Interrupt** and use the **First 5 Seconds Formula** (Silence, Permission, Purpose). (Reference: Prospecting Mindset)
+3. **Positioning**: Use the "**Extension, not Replacement**" approach (Paramantra extends existing systems like SAP/Salesforce without disruption).
+4. **Tone**: Use the "**Path of least friction**" and "**No rush**" tone. Start soft and be non-confrontational.
+5. **Key Hook**: Address **${painPointStr}** by positioning Paramantra as a solution for **${classificationStr}** businesses.
 
 **OUTPUT FORMAT**:
 --VOICEMAIL SCRIPT--
