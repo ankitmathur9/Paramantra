@@ -1,363 +1,173 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Paramantra BDC Prompt Generator</title>
-    <style>
-        :root {
-            /* --- PARAMANTRA BRAND COLORS --- */
-            --primary: #004D99; /* Deep Navy Blue */
-            --accent: #FF7F00; /* Vibrant Orange */
-            /* ------------------------------- */
-            --bg: #f3f6fb;
-            --card: #ffffff;
-            --muted: #6b7280;
-            --success: #10b981;
-            --error: #ef4444;
-            --max-width: 920px;
-            --radius: 12px;
-        }
-
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            background: var(--bg);
-            font-family: "Segoe UI", Arial, sans-serif;
-            color: #222;
-        }
-
-        .wrap {
-            max-width: var(--max-width);
-            margin: 24px auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: 0 8px 30px rgba(0, 77, 153, 0.08);
-            padding: 22px;
-            overflow: hidden;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 8px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .brand-logo-text {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--primary);
-            letter-spacing: 0.5px;
-            margin-right: 10px;
-        }
-
-        h1 {
-            font-size: 1.4rem;
-            margin: 0;
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        h2 {
-            font-size: 1.1rem;
-            margin: 25px 0 16px 0;
-            color: var(--primary);
-            font-weight: 600;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: #333;
-            font-size: 0.95rem;
-        }
-
-        input[type="text"],
-        select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input[type="text"]:focus,
-        select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(255, 127, 0, 0.2);
-            outline: none;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .btn-primary,
-        .btn-secondary {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s, box-shadow 0.2s;
-            font-weight: 600;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: var(--card);
-        }
-
-        .btn-primary:hover {
-            background: #003366;
-        }
-
-        .btn-secondary {
-            background: #e5e7eb;
-            color: #374151;
-            margin-left: 12px;
-        }
-
-        .btn-secondary:hover {
-            background: #d1d5db;
-        }
-
-        .output-section {
-            margin-top: 24px;
-            position: relative;
-        }
-
-        .output-section h2 {
-            margin-bottom: 10px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 400px;
-            padding: 15px;
-            border: 1px solid var(--primary);
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 0.85rem;
-            font-family: Consolas, monospace;
-            background: #f9f9f9;
-            resize: vertical;
-            line-height: 1.4;
-            display: block;
-        }
-
-        #outputArea {
-            transition: max-height 0.3s ease-in-out;
-            overflow: hidden;
-            max-height: 0;
-            display: none;
-            position: relative;
-        }
-
-        .btn-copy {
-            position: absolute;
-            top: 25px;
-            right: 15px;
-            background: var(--accent);
-            color: var(--card);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .btn-copy:hover {
-            background: #cc6600;
-        }
-
-        .btn-row {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            margin-top: 16px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            border-radius: 6px;
-            color: var(--card);
-            font-weight: 500;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-            transform: translateY(20px);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast.success {
-            background: var(--success);
-        }
-
-        .toast.error {
-            background: var(--error);
-        }
-
-        .required::after {
-            content: '*';
-            color: var(--error);
-            margin-left: 4px;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paramantra BDC Prompt Generator</title>
+  <style>
+    :root{
+      /* --- PARAMANTRA BRAND COLORS --- */
+      --primary: #004D99; /* Deep Navy Blue */
+      --accent: #FF7F00; /* Vibrant Orange */
+      /* ------------------------------- */
+      --bg: #f3f6fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --success: #10b981;
+      --error: #ef4444;
+      --max-width: 920px;
+      --radius: 12px;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:#222}
+    .wrap{max-width:var(--max-width);margin:24px auto;padding:20px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,77,153,0.08);padding:22px;overflow:hidden}
+    .brand{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+    /* Updated styling for the brand text element */
+    .brand-logo-text{
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--primary);
+        letter-spacing: 0.5px;
+        margin-right: 10px;
+    }
+    h1{font-size:1.4rem;margin:0;color:var(--primary);font-weight:700}
+    h2{font-size:1.1rem;margin:0 0 16px 0;color:var(--primary);font-weight:600;border-bottom:1px solid #eee;padding-bottom:8px}
+    .input-group{margin-bottom:16px}
+    label{display:block;margin-bottom:6px;font-weight:500;color:#333}
+    input[type="text"]{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:1rem;transition:border-color 0.2s}
+    input[type="text"]:focus{border-color:var(--primary);outline:none}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .btn-primary,.btn-secondary{padding:10px 18px;border:none;border-radius:6px;font-size:1rem;cursor:pointer;transition:background-color 0.2s,box-shadow 0.2s;font-weight:600}
+    .btn-primary{background:var(--primary);color:var(--card)}
+    .btn-primary:hover{background:#003366} /* Darker blue on hover */
+    .btn-secondary{background:#e5e7eb;color:#374151;margin-left:12px}
+    .btn-secondary:hover{background:#d1d5db}
+    .output-section{margin-top:24px;position:relative}
+    .output-section h2{margin-bottom:10px}
+    textarea{width:100%;height:400px;padding:15px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:0.85rem;font-family:Consolas,monospace;background:#f9f9f9;resize:none;line-height:1.4;display:block}
+    #outputArea{transition:max-height 0.3s ease-in-out;overflow:hidden;max-height:0;display:none}
+    .btn-copy{position:absolute;top:5px;right:0;background:var(--accent);color:var(--card);padding:5px 10px;border-radius:4px;font-size:0.8rem}
+    .btn-copy:hover{background:#cc6600} /* Darker orange on hover */
+    .btn-row{display:flex;justify-content:flex-start;align-items:center;margin-top:16px}
+    .toast{position:fixed;bottom:20px;right:20px;padding:10px 20px;border-radius:6px;color:var(--card);font-weight:500;z-index:1000;opacity:0;transition:opacity 0.3s,transform 0.3s;transform:translateY(20px)}
+    .toast.show{opacity:1;transform:translateY(0)}
+    .toast.success{background:var(--success)}
+    .toast.error{background:var(--error)}
+    .required::after{content:'*';color:var(--error);margin-left:4px}
+  </style>
 </head>
-
 <body>
-    <div class="wrap">
-        <div class="card">
-            <header class="brand">
-                <div class="brand-logo-text">PARAMANTRA</div>
-                <h1>BDC Hyper-Personalization Prompt Generator</h1>
-            </header>
-
-            <p style="color: var(--muted); margin-bottom: 24px;">
-                Enter the prospect details below. The system will auto-generate a high-context prompt embedding the **Paramantra ethos** and **core value proposition**, ensuring consistent, methodology-driven content creation.
-            </p>
-
-            <form id="promptForm">
-                <h2>Prospect Information (Required)</h2>
-                <div class="grid-2">
-                    <div class="input-group">
-                        <label for="firstName" class="required">First Name</label>
-                        <input type="text" id="firstName" placeholder="Jane" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="lastName" class="required">Last Name</label>
-                        <input type="text" id="lastName" placeholder="Doe" required />
-                    </div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="input-group">
-                        <label for="jobTitle" class="required">Job Title</label>
-                        <input type="text" id="jobTitle" placeholder="VP of Global Sales" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="companyName" class="required">Company Name</label>
-                        <input type="text" id="companyName" placeholder="Stellar Manufacturing Group" required />
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="companyWebsite" class="required">Company Website (e.g., stellarmanufacturing.com)</label>
-                    <input type="text" id="companyWebsite" placeholder="https://stellarmanufacturing.com" required />
-                </div>
-                
-                <h2>Additional Context (Optional Hook)</h2>
-                
-                <div class="input-group">
-                    <label for="prospectHook">Specific Prospect Hook or Known Challenge (E.g., "Recently announced expansion into APAC", "Field service backlog is high")</label>
-                    <input type="text" id="prospectHook" placeholder="Optional: Use public news or specific pain points for deeper personalization." />
-                </div>
-
-                <div class="input-group">
-                    <label for="linkedinUrl">Prospect LinkedIn URL (Optional for deeper research)</label>
-                    <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/janedoe" />
-                </div>
-
-                <div class="btn-row">
-                    <button type="submit" class="btn-primary">Generate AI Prompt (Ctrl+Enter)</button>
-                    <button type="button" class="btn-secondary" id="resetButton" onclick="resetForm()">Clear Form</button>
-                </div>
-            </form>
-
-            <div class="output-section">
-                <button id="toggleBtn" class="btn-secondary" style="margin: 16px 0 8px 0;" onclick="togglePrompt()">Show Generated Prompt</button>
-                <div id="outputArea">
-                    <textarea id="promptText" readonly
-                        placeholder="Your hyper-personalized prompt will appear here after clicking Generate."></textarea>
-                    <button class="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
-                </div>
-            </div>
+  <div class="wrap">
+    <div class="card">
+      <header class="brand">
+        <div class="brand-logo-text">PARAMANTRA</div>
+        <h1>BDC Hyper-Personalization Prompt Generator</h1>
+      </header>
+      
+      <p style="color: var(--muted); margin-bottom: 24px;">Enter the prospect details below. The system will auto-generate a high-context prompt embedding the **Paramantra ethos**, ensuring consistent, methodology-driven content creation.</p>
+      
+      <form id="promptForm">
+        <h2>Prospect Information (Required for Personalization)</h2>
+        
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="firstName" class="required">First Name</label>
+            <input type="text" id="firstName" placeholder="Jane" required />
+          </div>
+          <div class="input-group">
+            <label for="lastName" class="required">Last Name</label>
+            <input type="text" id="lastName" placeholder="Doe" required />
+          </div>
         </div>
+
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="jobTitle" class="required">Job Title</label>
+            <input type="text" id="jobTitle" placeholder="VP of Global Sales" required />
+          </div>
+          <div class="input-group">
+            <label for="companyName" class="required">Company Name</label>
+            <input type="text" id="companyName" placeholder="Stellar Manufacturing Group" required />
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="linkedinUrl">Prospect LinkedIn URL</label>
+          <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/janedoe" />
+        </div>
+        
+        <div class="input-group">
+          <label for="companyWebsite">Company Website</label>
+          <input type="text" id="companyWebsite" placeholder="https://stellarmanufacturing.com" />
+        </div>
+        
+        <div class="btn-row">
+          <button type="submit" class="btn-primary">Generate AI Prompt (Ctrl+Enter)</button>
+          <button type="button" class="btn-secondary" id="resetButton" onclick="resetForm()">Clear Form</button>
+        </div>
+      </form>
+
+      <div class="output-section">
+        <button id="toggleBtn" class="btn-secondary" style="margin: 16px 0 8px 0;" onclick="togglePrompt()">Show Generated Prompt</button>
+        <div id="outputArea">
+          <textarea id="promptText" readonly placeholder="Your hyper-personalized prompt will appear here after clicking Generate."></textarea>
+          <button class="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div id="toast" class="toast"></div>
+  <div id="toast" class="toast"></div>
 
-    <script>
-        document.getElementById('promptForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            generatePrompt();
-        });
+  <script>
+    document.getElementById('promptForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      generatePrompt();
+    });
 
-        // 1. DEFINE THE PARAMANTRA MANDATE (The AI's DNA)
-        const PARAMANTRA_MANDATE = `
+    // 1. DEFINE THE PARAMANTRA MANDATE (The AI's DNA)
+    const PARAMANTRA_MANDATE = `
 **[SYSTEM CONTEXT: PARAMANTRA CORE MANDATE]**
- 
+
 **1. PERSONA & ETHOS:**
-- **ACT AS** an elite Level 5 Business Development AI Assistant for Paramantra (Aldius Consulting Group Inc), specializing in complex sales cycles (80+ verticals, 250+ modules).
-- **MISSION:** Discovery, not Persuasion. The purpose of the first contact is to secure a 15-minute Up Front Contract (UFC) meeting, not to sell.
-- **CONDUCT (Non-Negotiable):** Exhibit Dignity in Conduct. ALWAYS be honest, thoughtful, and respectful. NEVER overquote, push unsuitable solutions, or mislead.
+- **ACT AS** an elite Business Development AI Assistant for Paramantra (Aldius Consulting Group Inc), specializing in complex sales cycles (80+ verticals, 250+ modules).
+- **MISSION:** Discovery, not Persuasion. Help the prospect explore their goals.
+- **CONDUCT (Non-Negotiable):** Exhibit Dignity in Conduct. ALWAYS be honest, thoughtful, and respectful. NEVER overquote, push unsuitable solutions, mislead, or put revenue need above customer's need for clarity.
 
 **2. STRATEGIC POSITIONING:**
-- Position Paramantra as a **Visibility and Enablement Layer** that **Extends, not Replaces,** existing systems (e.g., SAP, Salesforce, NetSuite).
-- We target businesses with complex sales cycles, high-touch customer journeys, or multi-stage revenue processes.
+- Position Paramantra as a **Visibility and Enablement Layer** that **Extends, not Replaces,** existing systems (SAP, Salesforce, NetSuite).
+- We are the "thermal control module" for revenue operations—delivering precise control without altering the core drive system. We target businesses with complex sales cycles (e.g., distributor models, custom quoting, service-intensive operations).
 
 **3. SALES METHODOLOGY (Mandatory Application):**
-- **Path of Least Friction:** Start soft. The first call purpose is to book another call or disqualify.
-- **Pattern Interrupt:** Begin calls with a 2-second silence/pause. Use the formula: "[Silence] You and I don't know each other. May I take 30 seconds and tell you why I called?"
+- **Path of Least Friction:** Start soft. The first call purpose is to **book another call or disqualify**.
+- **Pattern Interrupt:** Begin calls with a 2-second silence/pause. Use the formula: "You and I don't know each other. May I take 30 seconds and tell you why I called?" (Reference Prospecting Mindset).
 - **Sandler Techniques:** Must apply **Up-Front Contract (UFC)** for next steps, and use the **Pain Funnel** to uncover real pain.
 - **Tone/Style:** Content must be written as a strategic, objective, third-party business consultant who has studied the operations, not as a vendor.
- 
-**4. IMPLICIT CLASSIFICATION & CORE VALUE:**
-- **ASSUME** the prospect operates in a **B2B, High-Touch After-Sales/Service, Custom Orders** environment, where the core challenge is **revenue visibility and fragmented customer engagement data**. This anchors the solution mapping and is the default value if no specific hook is provided.
+
+**4. RESEARCH PROTOCOL:**
+- Systematically execute comprehensive Prospect Intelligence, Company Deep Dive, and Industry Contextualization based on the provided data to create hyper-personalized content.
 `;
 
-        // 2. GENERATE PROMPT FUNCTION
-        function generatePrompt() {
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const jobTitle = document.getElementById('jobTitle').value.trim();
-            const linkedinUrl = document.getElementById('linkedinUrl').value.trim();
-            const companyName = document.getElementById('companyName').value.trim();
-            const companyWebsite = document.getElementById('companyWebsite').value.trim();
-            const prospectHook = document.getElementById('prospectHook').value.trim(); // NEW OPTIONAL FIELD
+    // 2. GENERATE PROMPT FUNCTION (Optimized)
+    function generatePrompt() {
+      const firstName = document.getElementById('firstName').value.trim() || '{{FIRST_NAME}}';
+      const lastName = document.getElementById('lastName').value.trim() || '{{LAST_NAME}}';
+      const jobTitle = document.getElementById('jobTitle').value.trim() || '{{JOB_TITLE}}';
+      const linkedinUrl = document.getElementById('linkedinUrl').value.trim() || '{{LINKEDIN_URL}}';
+      const companyName = document.getElementById('companyName').value.trim() || '{{COMPANY_NAME}}';
+      const companyWebsite = document.getElementById('companyWebsite').value.trim() || '{{COMPANY_WEBSITE}}';
 
-            // Simple validation check for required fields (Level 1 Data)
-            if (!firstName || !lastName || !jobTitle || !companyName || !companyWebsite) {
-                showToast('Please fill out all required fields marked with *.', 'error');
-                return;
-            }
+      // Check if enough data is present for personalization
+      if (firstName === '{{FIRST_NAME}}' || companyName === '{{COMPANY_NAME}}' || jobTitle === '{{JOB_TITLE}}') {
+        showToast('Please enter at least First Name, Job Title, and Company Name for hyper-personalization.', 'error');
+        return;
+      }
 
-            // Define the hook/pain point for the AI, using the BDC input or the system default.
-            const targetPainPoint = prospectHook 
-                ? prospectHook 
-                : "Indirect sales visibility, managing distributed service teams, and fragmented customer data (the core Paramantra value proposition).";
-            
-            // CONSTRUCT THE FINAL, HIGH-CONTEXT PROMPT
-            const prompt = `${PARAMANTRA_MANDATE}
- 
-**[EXECUTION REQUEST - LEVEL 5 BDC LEADER BRIEFING]**
- 
+      // CONSTRUCT THE FINAL, HIGH-CONTEXT PROMPT
+      const prompt = `${PARAMANTRA_MANDATE}
+
+**[EXECUTION REQUEST]**
+
 **PROSPECT DATA (Hyper-Personalization Variables):**
 - First Name: ${firstName}
 - Last Name: ${lastName}
@@ -365,109 +175,101 @@
 - Company Name: ${companyName}
 - Company Website: ${companyWebsite}
 - LinkedIn URL: ${linkedinUrl}
-- **Primary Focus/Hook**: ${targetPainPoint}
- 
+
 **TASK:** Generate the following four deliverables based on the rules and context you have internalized above:
- 
-1. **EXECUTIVE BRIEF (500-600 words - IGNITE CURIOSITY):**
-    * **Objective**: Ignite interest & curiosity by demonstrating a profound, evidence-based understanding of the prospect's specific challenges related to **${targetPainPoint}**.
-    * **Content**: Create **1-2 specific, hypothetical, but highly realistic business scenarios** at ${companyName} to illustrate the pain. Detail **2-3 Paramantra modules** that would act as a non-disruptive **EXTENSION** to solve the problem.
- 
-2. **CALL SCRIPT (2-3 min flow):** Opening (Pattern Interrupt) → Qualify (Pain Funnel Discovery) → Value (Extension Focus) → Close (UFC Next Step). Use placeholder **[PHONE_NUMBER]**.
- 
-3. **VOICEMAIL SCRIPT (Consultative, ~45 seconds):** Must employ a Pattern Interrupt. Use placeholder **[PHONE_NUMBER]**.
- 
-4. **EMAIL SCRIPT:** Professional, empathetic body. The Subject must be compelling and personalized, relating directly to the **${targetPainPoint}**. Use placeholders **[TIME], [DATE], [PHONE_NUMBER]**.
- 
-**CRITICAL REQUIREMENT: Begin your response with the EXECUTIVE BRIEF. Ensure the tone is consultative and avoids vendor hyperbole.**`;
 
-            const promptTextElement = document.getElementById('promptText');
-            promptTextElement.value = prompt;
-            openOutput();
-            showToast('Prompt generated successfully! Click Copy to use.', 'success');
-        }
+1. **EXECUTIVE SUMMARY (500-600 words):** Strategic brief mapping the prospect's operational reality to Paramantra's capabilities.
+2. **CALL SCRIPT:** Opening (Pattern Interrupt) → Qualify (Pain Funnel Discovery) → Value (Solution Mapping) → Close (UFC Next Step). (Approx. 2-3 minute flow).
+3. **VOICEMAIL SCRIPT:** Consultative, respectful, non-salesy.
+4. **EMAIL SCRIPT:** Professional with personalized lowercase subject, empathetic body, soft exploratory CTA.
 
-        // --- Utility Functions ---
+**IMPORTANT: Begin your response with the Executive Summary. Ensure the tone is consultative and avoids vendor hyperbole.**`;
 
-        const outputArea = document.getElementById('outputArea');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const promptTextElement = document.getElementById('promptText');
-        const toastElement = document.getElementById('toast');
+      const promptText = document.getElementById('promptText');
+      promptText.value = prompt;
+      openOutput();
+      showToast('Prompt generated successfully! Click Copy to use.', 'success');
+    }
 
-        function showToast(message, type = 'success') {
-            toastElement.textContent = message;
-            toastElement.className = `toast show ${type}`;
-            setTimeout(() => {
-                toastElement.classList.remove('show');
-            }, 3000);
-        }
+    // --- Utility Functions ---
 
-        function copyPrompt() {
-            if (promptTextElement.value) {
-                navigator.clipboard.writeText(promptTextElement.value)
-                    .then(() => {
-                        showToast('Prompt copied to clipboard!', 'success');
-                    })
-                    .catch(err => {
-                        showToast('Copy failed. Please select and copy manually', 'error');
-                    });
-            } else {
-                showToast('No prompt generated yet.', 'error');
-            }
-        }
+    const outputArea = document.getElementById('outputArea');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const promptText = document.getElementById('promptText');
+    const toastElement = document.getElementById('toast');
 
-        function togglePrompt() {
-            if (outputArea.style.maxHeight && outputArea.style.maxHeight !== '0px') {
-                closeOutput();
-            } else {
-                openOutput();
-            }
-        }
+    function showToast(message, type = 'success') {
+      toastElement.textContent = message;
+      toastElement.className = `toast show ${type}`;
+      setTimeout(() => {
+        toastElement.classList.remove('show');
+      }, 3000);
+    }
 
-        function openOutput() {
-            outputArea.style.display = 'block';
-            setTimeout(() => {
-                // Set max height high enough to show content, using scrollHeight as a base
-                outputArea.style.maxHeight = promptTextElement.scrollHeight + 100 + 'px'; 
-                toggleBtn.textContent = 'Hide Generated Prompt';
-            }, 10);
-        }
+    function copyPrompt() {
+      if (promptText.value) {
+        navigator.clipboard.writeText(promptText.value)
+          .then(() => {
+            showToast('Prompt copied to clipboard!', 'success');
+          })
+          .catch(err => {
+            showToast('Copy failed. Please select and copy manually', 'error');
+          });
+      } else {
+        showToast('No prompt generated yet.', 'error');
+      }
+    }
 
-        function closeOutput() {
-            outputArea.style.maxHeight = '0';
-            toggleBtn.textContent = 'Show Generated Prompt';
-            setTimeout(() => {
-                if (outputArea.style.maxHeight === '0px') outputArea.style.display = 'none';
-            }, 350);
-        }
+    function togglePrompt() {
+      if (outputArea.style.maxHeight && outputArea.style.maxHeight !== '0px') {
+        closeOutput();
+      } else {
+        openOutput();
+      }
+    }
 
-        // Reset form cleanly
-        function resetForm() {
-            document.getElementById('firstName').value = '';
-            document.getElementById('lastName').value = '';
-            document.getElementById('jobTitle').value = '';
-            document.getElementById('linkedinUrl').value = '';
-            document.getElementById('companyName').value = '';
-            document.getElementById('companyWebsite').value = '';
-            document.getElementById('prospectHook').value = ''; 
-            promptTextElement.value = '';
-            closeOutput();
-            showToast('Form cleared', 'success');
-        }
+    function openOutput() {
+      outputArea.style.display = 'block';
+      setTimeout(() => {
+          outputArea.style.maxHeight = '1200px'; 
+          toggleBtn.textContent = 'Hide Generated Prompt';
+      }, 10);
+    }
 
-        // keyboard shortcut: Cmd/Ctrl+Enter to generate
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault(); // Prevent default form submission
-                generatePrompt();
-            }
-        });
+    function closeOutput() {
+      outputArea.style.maxHeight = '0';
+      toggleBtn.textContent = 'Show Generated Prompt';
+      setTimeout(() => {
+        if (outputArea.style.maxHeight === '0px') outputArea.style.display = 'none';
+      }, 350);
+    }
 
-        // Ensure output is closed on load
-        document.addEventListener('DOMContentLoaded', () => {
-            closeOutput();
-        });
-    </script>
+    // Reset form cleanly
+    function resetForm() {
+      document.getElementById('firstName').value = '';
+      document.getElementById('lastName').value = '';
+      document.getElementById('jobTitle').value = '';
+      document.getElementById('linkedinUrl').value = '';
+      document.getElementById('companyName').value = '';
+      document.getElementById('companyWebsite').value = '';
+      promptText.value = '';
+      closeOutput();
+      showToast('Form cleared', 'success');
+    }
+
+    // keyboard shortcut: Cmd/Ctrl+Enter to generate
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault(); // Prevent default form submission
+        generatePrompt();
+      }
+    });
+
+    // Ensure output is closed on load
+    document.addEventListener('DOMContentLoaded', () => {
+        closeOutput();
+    });
+
+  </script>
 </body>
-
 </html>
