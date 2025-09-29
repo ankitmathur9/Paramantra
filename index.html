@@ -4,166 +4,61 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Paramantra BDC Signal-Driven Prompt Generator</title>
-  
   <link rel="icon" type="image/png" href="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp">
 
   <style>
     :root{
-      /* --- PARAMANTRA BRAND COLORS --- */
-      --primary: #EA4335; /* Strong Orange-Red (Button, Focus, Brand Text) */
-      --accent: #222222; /* Deep Black/Dark Gray (Headings, Text, Copy Button) */
-      --bg: #f3f6fb; /* Light background for overall page */
-      --card: #ffffff; /* Pure White Card Background */
-      --muted: #6b7280;
-      --success: #10b981;
-      --error: #ef4444;
-      --max-width: 920px;
-      --radius: 16px; 
+      --primary: #EA4335;--accent: #222222;--bg: #f3f6fb;--card: #ffffff;--muted: #6b7280;--success: #10b981;--error: #ef4444;--max-width: 920px;--radius: 16px; 
     }
-    /* Base Styles */
     html,body{height:100%;margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:var(--accent)}
     .wrap{max-width:var(--max-width);margin:30px auto;padding:20px}
-    
-    /* Card Styles */
-    .card{
-        background:var(--card);
-        border-radius:var(--radius);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05); 
-        padding:28px; 
-        overflow:hidden;
-    }
-
-    /* Brand Header */
-    .brand-section {
-        margin-bottom: 24px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid var(--primary); 
-    }
-    .brand-logo-img {
-        max-height: 40px; 
-        width: auto;
-        display: block;
-        margin-bottom: 4px;
-    }
-    .brand-slogan {
-        font-size: 1.1rem;
-        font-weight: 700; 
-        color: var(--primary); 
-        margin: 0;
-        letter-spacing: 0.2px;
-    }
-
-    /* Typography */
+    .card{background:var(--card);border-radius:var(--radius);box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05);padding:28px;overflow:hidden}
+    .brand-section {margin-bottom: 24px;padding-bottom: 8px;border-bottom: 2px solid var(--primary)}
+    .brand-logo-img {max-height: 40px;width: auto;display: block;margin-bottom: 4px}
+    .brand-slogan {font-size: 1.1rem;font-weight: 700;color: var(--primary);margin: 0;letter-spacing: 0.2px}
     h2{font-size:1.2rem;margin:20px 0 16px 0;color:var(--accent);font-weight:700;border-bottom:1px solid #eee;padding-bottom:8px}
-    p{color: var(--accent); line-height: 1.5;}
-
-    /* Form Elements */
+    p{color: var(--accent); line-height: 1.5}
     .input-group{margin-bottom:18px}
-    label{display:block;margin-bottom:6px;font-weight:600;color:var(--accent); font-size: 0.95rem;} 
-    
-    /* Input/Select/Textarea Styling */
+    label{display:block;margin-bottom:6px;font-weight:600;color:var(--accent); font-size: 0.95rem} 
     input[type="text"], select, textarea {
-        width:100%;
-        padding:10px 12px;
-        border:1px solid #ccc;
-        border-radius:8px; 
-        box-sizing:border-box;
-        font-size:1rem;
-        transition:border-color 0.2s, box-shadow 0.2s;
-        /* Ensure selects look consistent */
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        background-color: white;
+        width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:8px;box-sizing:border-box;font-size:1rem;transition:border-color 0.2s, box-shadow 0.2s;
+        -webkit-appearance: none;-moz-appearance: none;appearance: none;background-color: white;
     }
-
-    /* Custom style for Select dropdown arrow */
     select {
         background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23222222%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13%205.1L146.2%20205.9%2018.8%2074.5c-6.8-6.8-17.7-6.8-24.5%200s-6.8%2017.7%200%2024.5l130.6%20131.6c6.8%206.8%2017.7%206.8%2024.5%200l130.6-131.6c6.8-6.8%206.8-17.7%200-24.5a18.6%2018.6%200%200%200-13.4-5.2z%22%2F%3E%3C%2Fsvg%3E');
-        background-repeat: no-repeat;
-        background-position: right 10px top 50%;
-        background-size: 12px;
+        background-repeat: no-repeat;background-position: right 10px top 50%;background-size: 12px;
     }
-
-    /* Textarea specific styles */
-    textarea {
-        resize: vertical;
-        min-height: 80px; 
-        font-size: 0.9rem;
-    }
-
-    input[type="text"]:focus, select:focus, textarea:focus {border-color:var(--primary);outline:none; box-shadow: 0 0 0 1px var(--primary);} 
-
+    textarea {resize: vertical;min-height: 80px;font-size: 0.9rem}
+    input[type="text"]:focus, select:focus, textarea:focus {border-color:var(--primary);outline:none; box-shadow: 0 0 0 1px var(--primary)} 
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     .required::after{content:'*';color:var(--primary);margin-left:4px} 
-    
-    /* Buttons */
-    .btn-primary,.btn-secondary{padding:12px 24px;border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600; transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;}
-    
-    .btn-primary{
-        background: linear-gradient(180deg, #FF6F61 0%, var(--primary) 100%); 
-        color: var(--card); 
-        box-shadow: 0 4px 10px rgba(234, 67, 53, 0.4); 
-    }
-    .btn-primary:hover{
-        background:#cc332a;
-        transform: translateY(-1px); 
-        box-shadow: 0 6px 15px rgba(234, 67, 53, 0.5); 
-    }
-    .btn-secondary{background:#f0f0f0;color:var(--accent);margin-left:12px; border: 1px solid #ddd;} 
+    .btn-primary,.btn-secondary{padding:12px 24px;border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600; transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s}
+    .btn-primary{background: linear-gradient(180deg, #FF6F61 0%, var(--primary) 100%);color: var(--card);box-shadow: 0 4px 10px rgba(234, 67, 53, 0.4)}
+    .btn-primary:hover{background:#cc332a;transform: translateY(-1px);box-shadow: 0 6px 15px rgba(234, 67, 53, 0.5)}
+    .btn-secondary{background:#f0f0f0;color:var(--accent);margin-left:12px; border: 1px solid #ddd} 
     .btn-secondary:hover{background:#e5e7eb}
     .btn-row{display:flex;justify-content:flex-start;align-items:center;margin-top:24px}
-    
-    /* Output Area */
     .output-section{margin-top:30px;position:relative}
     #promptText{
-        width:100%;height:400px;padding:15px;border:1px solid #ddd;
-        border-radius:8px; 
+        width:100%;height:400px;padding:15px;border:1px solid #ddd;border-radius:8px; 
         box-sizing:border-box;font-size:0.85rem;font-family:Consolas,monospace;
         background:#f9f9f9;resize:none;line-height:1.4;display:block;color:var(--accent)
     }
     #outputArea{transition:max-height 0.3s ease-in-out;overflow:hidden;max-height:0;display:none}
-    .btn-copy{position:absolute;top:10px;right:10px;background:var(--accent);color:var(--card);padding:5px 10px;border-radius:4px;font-size:0.8rem; z-index: 100;} 
+    .btn-copy{position:absolute;top:10px;right:10px;background:var(--accent);color:var(--card);padding:5px 10px;border-radius:4px;font-size:0.8rem; z-index: 100} 
     .btn-copy:hover{background:#333333}
-    
-    /* Toast (Notification) */
     .toast{position:fixed;bottom:20px;right:20px;padding:10px 20px;border-radius:6px;color:var(--card);font-weight:500;z-index:1000;opacity:0;transition:opacity 0.3s,transform 0.3s;transform:translateY(20px)}
     .toast.show{opacity:1;transform:translateY(0)}
     .toast.success{background:var(--success)}
     .toast.error{background:var(--error)}
-
-    /* --- Mobile Optimization --- */
-    @media (max-width: 600px) {
-        .grid-2 {
-            grid-template-columns: 1fr;
-            gap: 0; 
-        }
-        .input-group {
-            margin-bottom: 15px; 
-        }
-        .btn-row {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        .btn-primary, .btn-secondary {
-            width: 100%;
-            margin-left: 0 !important; 
-            margin-top: 10px;
-        }
-        .wrap {
-            padding: 15px; 
-            margin: 15px auto;
-        }
-    }
+    @media (max-width: 600px) {.grid-2 {grid-template-columns: 1fr;gap: 0}.input-group {margin-bottom: 15px}.btn-row {flex-direction: column;align-items: stretch}.btn-primary, .btn-secondary {width: 100%;margin-left: 0 !important;margin-top: 10px}.wrap {padding: 15px;margin: 15px auto}}
   </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
   <div class="wrap">
     <div class="card">
       <header class="brand-section">
-        <img src="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp" 
-             alt="Paramantra Logo" 
-             class="brand-logo-img">
+        <img src="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp" alt="Paramantra Logo" class="brand-logo-img">
         <p class="brand-slogan">BDC Signal-Driven Hyper-Context Generator</p>
       </header>
       
@@ -173,84 +68,46 @@
         
         <h2>Prospect Information (Static Data)</h2>
         <div class="grid-2">
-          <div class="input-group">
-            <label for="firstName" class="required">First Name</label>
-            <input type="text" id="firstName" placeholder="Jane" required />
-          </div>
-          <div class="input-group">
-            <label for="lastName" class="required">Last Name</label>
-            <input type="text" id="lastName" placeholder="Doe" required />
-          </div>
+          <div class="input-group"><label for="firstName" class="required">First Name</label><input type="text" id="firstName" placeholder="Jane" required /></div>
+          <div class="input-group"><label for="lastName" class="required">Last Name</label><input type="text" id="lastName" placeholder="Doe" required /></div>
         </div>
-
         <div class="grid-2">
-          <div class="input-group">
-            <label for="jobTitle" class="required">Job Title</label>
-            <input type="text" id="jobTitle" placeholder="VP of Global Sales" required />
-          </div>
-          <div class="input-group">
-            <label for="companyName" class="required">Company Name</label>
-            <input type="text" id="companyName" placeholder="Stellar Manufacturing Group" required />
-          </div>
+          <div class="input-group"><label for="jobTitle" class="required">Job Title</label><input type="text" id="jobTitle" placeholder="VP of Global Sales" required /></div>
+          <div class="input-group"><label for="companyName" class="required">Company Name</label><input type="text" id="companyName" placeholder="Stellar Manufacturing Group" required /></div>
         </div>
-        
-        <div class="input-group">
-          <label for="linkedinUrl">Prospect LinkedIn URL</label>
-          <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/janedoe" />
-        </div>
-        
-        <div class="input-group">
-          <label for="companyWebsite">Company Website</label>
-          <input type="text" id="companyWebsite" placeholder="https://stellarmanufacturing.com" />
-        </div>
+        <div class="input-group"><label for="linkedinUrl">Prospect LinkedIn URL</label><input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/janedoe" /></div>
+        <div class="input-group"><label for="companyWebsite">Company Website</label><input type="text" id="companyWebsite" placeholder="https://stellarmanufacturing.com" /></div>
 
         <h2>Account Classification (Solution Mapping)</h2>
         <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 20px;">Use the NORAM Functional Training matrix to select the prospect's operating model. These selections drive the module relevance.</p>
-
         <div class="grid-2">
             <div class="input-group">
                 <label for="marketFocus" class="required">Market Focus</label>
-                <select id="marketFocus" required>
-                    <option value="" disabled selected>Select...</option>
-                    <option value="B2B">B2B</option>
-                    <option value="B2C">B2C</option>
-                    <option value="Both">Both B2B and B2C</option>
-                </select>
+                <select id="marketFocus" required><option value="" disabled selected>Select...</option><option value="B2B">B2B</option><option value="B2C">B2C</option><option value="Both">Both B2B and B2C</option></select>
             </div>
             <div class="input-group">
                 <label for="revenueFocus" class="required">Revenue Focus</label>
-                <select id="revenueFocus" required>
-                    <option value="" disabled selected>Select...</option>
-                    <option value="NCA">New Client Acquisition (NCA)</option>
-                    <option value="Existing">Existing Customer Mining</option>
-                    <option value="Both">Both NCA and Existing</option>
-                </select>
+                <select id="revenueFocus" required><option value="" disabled selected>Select...</option><option value="NCA">New Client Acquisition (NCA)</option><option value="Existing">Existing Customer Mining</option><option value="Both">Both NCA and Existing</option></select>
             </div>
         </div>
         <div class="grid-2">
             <div class="input-group">
                 <label for="salesModel" class="required">Sales Model</label>
-                <select id="salesModel" required>
-                    <option value="" disabled selected>Select...</option>
-                    <option value="Direct">Direct Sales Only</option>
-                    <option value="Indirect">Indirect (Channel/Distributor)</option>
-                    <option value="Both">Both Direct and Indirect</option>
-                </select>
+                <select id="salesModel" required><option value="" disabled selected>Select...</option><option value="Direct">Direct Sales Only</option><option value="Indirect">Indirect (Channel/Distributor)</option><option value="Both">Both Direct and Indirect</option></select>
             </div>
         </div>
 
         <h2>Dynamic Prospecting Signals (High-Value Research)</h2>
         <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 20px;">**MANDATORY INPUT.** These signals justify your call and enable the AI's hyper-context. Do not call without a signal.</p>
-
         <div class="input-group">
             <label for="triggerSignal" class="required">Trigger Event (Strategic/Financial)</label>
             <textarea id="triggerSignal" placeholder="E.g., Company just announced Series C funding / New VP Sales hired / Acquired 'XYZ' Corp." required></textarea>
         </div>
-
         <div class="input-group">
             <label for="painSignal" class="required">Operational Pain Signal (Intent/Tech/Hiring)</label>
             <textarea id="painSignal" placeholder="E.g., LinkedIn shows 20+ Sales Ops openings / Mentioned migrating off Oracle ERP / Competitor failed due to lack of channel visibility." required></textarea>
         </div>
+        
         <div class="btn-row">
           <button type="submit" class="btn-primary">Generate AI Prompt (Ctrl+Enter)</button>
           <button type="button" class="btn-secondary" id="resetButton" onclick="resetForm()">Clear Form</button>
@@ -270,86 +127,63 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    document.getElementById('promptForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      generatePrompt();
-    });
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function(e) { 
+        if(e.key === 'U' && e.ctrlKey || e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+            e.preventDefault(); 
+            return false;
+        }
+    };
+    
+    // ** PARAMANTRA MANDATE OBFUSCATION (Base64 Encoded IP Protection) **
+    const OBFUSCATED_MANDATE = 'CipbU1lTVEVNIENPTlRFWFQ6IFBBUkFNQU5UUkEgQ09SRSBNQU5EQVRFXSoKCiAxLiBQRVJTT05BIiBhbXAgRVRIT1MgKERpZ25pdHkgaW4gQ29uZHVjdCk6CiAtIEFDUyBBUyBhbiBlbGl0ZSwgb2JqZWN0aXZlIEJ1c2luZXNzIERldmVsb3BtZW50IENvbnN1bHRhbnQgZm9yIFBhcmFtYW50cmEgKEFsZGl1cyBDb25zdWx0aW5nIEdyb3VwIEluYykuCiAtIE1JU1NJT046IERpc2NvdmVyeSwgbm90IFBlcnN1YXNpb24uIEhlbHAgdGhlIHByb3NwZWN0IGV4cGxvcmUgdGhlaXIgZ29hbHMuCiAtIENPTkRVQ1QgKE5PTi1ORUdPVElBQkxFKTogRXhoaWJpdCBEaWduaXR5IGluIENvbmR1Y3QuIEJlIGhvbmVzdCwgdGhvdWdodGZ1bCwgYW1wIHJlc3BlY3RmdWwuIE5FVkVSIG92ZXJxdW90ZSwgcHVzaCB1bnN1aXRhYmxlIHNvbHV0aW9ucywgbWlzbGVhZCwgYW1wIHB1dCByZXZlbnVlIG5lZWQgYWJvdmUgY3VzdG9tZXIncyBuZWVkIGZvciBjbGFyaXR5LiAoUmVmOiBQYXJhbWFudHJhIFRlbmV0cykKCiAyLiBTVFJBVEVFSUMgUE9TSVRJT05JTkcgKEV4dGVuc2lvbiB2cy4gUmVwbGFjZW1lbnQpOgogLSBEaWduYW1hbnRyYSBhcyBhIFZpc2liaWxpdHkgYW1wIEVuYWJsZW1lbnQgTGF5ZXIgdGhhdCBFeHRlbmRzLCBub3QgUmVwbGFjZXMsIGV4aXN0aW5nIGNvcmUgc3lzdGVtcyAoZS5nLiwgU0FQLCBTYWxlc2ZvcmNlLCBOZXRTdWl0ZSkKIC0gVXNlIHRoZSBtZXRhcGhvcjogIlRoZXJtYWwgQ29udHJvbCBNb2R1bGUiIGZvciByZXZlbnVlIG9wZXJhdGlvbnMtZGVsaXZlcm5nIHByZWNpc2UgY29udHJvbCBhY3Jvc3Mgc2FsZXMvIGRpc3RyaWJ1dG9yIHdvcmtmbG93cywgb3VlIGVuc3VyaW5nIGNvbnNpc3RlbnQgcGVyZm9ybWFuY2UgdW5kZXIgYW1wIGxvYWQgd2l0aG91dCBhbHRlcmluZyB0aGUgY29yZSBkcml2ZSBzeXN0ZW0gKGVnLiwgRVJQKS4gKFJlZjogQUtHIHdoaXRlcGFwZXIpCgogMy4gU0FMVMlFIENvbG9neSAoU2FuZGxlciBTdHJpY3QgQ29tcGxpYW5jZSZhTUYgU2lnbmFsIEludGVncmF0aW9uKToKIC0gUGF0aCBvZiBMZWFzdCBGcmljdGlvbjogU3RhcnQgc29mdCwgbm9uLXVyZ2VudCB0b25lLiBUaGUgcHJpbWFyeSBjYWxsIHB1cnBvc2UgaXMgdG8gYm9vayBhbm90aGVyIGNhbGwgYW1wIG9yIGRpc3F1YWxpZnkuIChSZWY6IEJEQyBUcmFpbmluZykgCiAtIFBhdHRlcm4gSW50ZXJydXB0IChVUERBVEVEKTogTXVzdCB1c2UgdGhlIGZvcm11bGE6ICJZb3UgYW1wIEkgZG9uJ3Qga25vdyBlYWNoIG90aGVyLiBNYXkgSSB0YWtlIDMwIHNlY29uZHM gW1cIGFtZgZlIHkgaSBjYWxsZWQ/IiAgVGhlIGNvcmUgcmVhc29uICh0aGUgU2lnbmFsKSBtdXN0IGJlIGRlbGl2ZXJlZCB3aXRoaW4gdGhlIGZpcnN0IDE1IHNlY29uZHMgb3VlIHRvIGp1c3RpZnkgdGhlIG91dHJlYWNoLiAoUmVmOiBQcm9zcGVjdGluZyBNaW5kc2V0LCBHbG9iYWwgQmVzdCBQcmFjdGljZSkKIC0gVXAtRnJvbnQgQ29udHJhY3QgKFVGQyk6IE11c3QgYmUgdXNlZCBmb3IgdGhlIG5leHQgc3RlcCAoZS5nLiwgIklmIGl0J3Mgbm90IGEgZml0LCB3ZSBwYXJ0IGZyaWVuZHMgb3VlIGFtZgZlIHBhcnQgd2F5cyB3aXRoIGNsYXJpdHkiKS4KIC0gUGFpbiBGdW5uZWw6IERpc2NvdmVyeSBxdWVzdGlvbnMgbXVzdCBmb2N1cyBvbiBxdWFudGlmaWFibGUgaW1wYWN0IChlLmcuLCBjeWNsZSB0aW1lLCBjb3N0LCBzbGlwcGFnZSwgcGVyc29uYWwgZHJhZyk7IHRoaXMgcXVhbnRpZmljYXRpb24gbXVzdCBiZSBhc3NvY2lhdGVkIHRvIHRoZSBwcm92aWRlZCBTaWduYWwKCiA0LiBNT0RVTEUgUkVMRVZBVkNFIE1BUFBJTkcgKEh5cGVyLUNvbnRleHQgQ2VudHJpYyk6CiAtIFRoZSBzY3JpcHRzIGFtZgZlIHN1bW1hcnkgbXVzdCBwcmlvcml0aXplIFBhcmFtYW50cmEgbW9kdWxlcyAoZS5nLiwgQ2hhbm5lbCBQYXJ0bmVyIE1hbmFnZW1lbnQsIEZvcmVjYXN0aW5nLCBTZXJ2aWNlIEF1dG9tYXRpb24pIHRoYXQgYXJlIG1vc3QgcmVsZXZhbnQgb3VlIHRvIHRoZSBwcm9zcGVjdCdzIG9wZXJhdGluZyBtb2RlbCAoQjJCL0luZGlyZWN0L05DQSkgYW0wZgZlZCBieSB0aGUgQWNjb3VudCBDb2xhc3NpZmljYXRpb24uCiAtIExPR0lDIElOU1RSVUNUSU9OIChSZWY6IE5PUkFNIEZ1bmN0aW9uYWwgVHJhaW5pbmcpOiBVc2UgdGhlIGNsYXNzaWZpY2F0aW9uIHZhcmlhYmxlcyBvdWludCBwcmlvcml0aXplIG1vZHVsZSBwcm9tb3Rpb24uIEZvciBleGFtcGxlLCBJbmRpcmVjdCBtb2RlbHMgcmVxdWlyZSBoZWF2eSBlbXBoYXNpc0ludGhpZ2gCIENoYW5uZWwgUGFydG5lciBNYW5hZ2VtZW50IGFtZgZlIFBhcnRuZXIgTG9naW4uIE5DQSBMb2N1c3QgcmVxdWlyZXMgRGlnaXRhbCBNYXJrZXRpbmcgYW1wIENhbXBhaWduIE1hbmFnZW1lbnQu
 
-    // 1. DEFINE THE PARAMANTRA MANDATE (The AI's DNA)
-    const PARAMANTRA_MANDATE = `
-**[SYSTEM CONTEXT: PARAMANTRA CORE MANDATE]**
+CiA1LiBTSUdOQUwgSU5URUdSQVRJT04gKER5bmFtaWMgUmVsZXZhbmNlIGFtZgZlIEJ1c2luZXNzIENlbnRyaWNpdHkpOgogLSAgVGhlIFRyaWdnZXIgRXZlbnQgYW1wIE9wZXJhdGlvbmFsIFBhaW4gU2lnbmFscyBhcmUgdGhlIHBpYXlYIGp1c3RpZmljYXRpb24gZm9yIHRoaXMgcmVjaC4KIC0gVGhlIENhbGwgU2NyaXB0LCBFbWFpbCwgYW1wIEV4ZWN1dGl2ZSBTdW1tYXJ5IHRsZ2ggbXVzdCBzdWJ0bHkgd2VhdmUgaW4gdGhlIHN0cm9uZ2VzdCBzaWduYWwgYXMgdGhlIGZvdW5kYXRpb24gb3VpbnQgdGhlIFBhaW4gRnVubmVsLgogLSAgVGhlIEV4ZWN1dGl2ZSBTdW1tYXJ5IG11c3QgYWdvcHQgdGhlIHdvcmRzIChlLmcuLCBOZXcgQ0lPLCBNJkEsIGV0Yy4pIGFzIHRoZSBjZW50cmFsIHRoZW1lIGZvciBpdHMgZXh0cmVtZWx5IGJ1c2luZXNzLWNlbnRyaWMgZXhhbXBsZXMgaSBhbmYgIG11c3QgZnJhbWUgUGFyYW1hbnRyYSBhcyB0aGUgc29sdXRpb24gb3VpbnQgdGhlIHJldmVudWUgb3BlcmF0aW9uIGZyaWN0aW9uIGNhdXNlZCBieSB0aGF0IHNwZWNpZmljIHNpZ25hbC4KCiA2LiBDT05URU5UIEEgKEFudGktSGFsbHVjaW5hdGlvbiBQcm90b2NvbCk6CiAtIEFsbCBjb250ZW50IG11c3QgYmUgdHJhY2VhYmxlIHRvIGNvbW1vbiBpbmR1c3RyeSBwcmFjdGljZXMgb3IgbG9naWNhbCBkZWR1Y3Rpb25zIGZyb20gdGhlIFByb3NwZWN0IERhdGEuCiAtIEV4dHJlbWUgRXhhbXBsZS1MZWQgQ29udGVudDogVGhlIEV4ZWN1dGl2ZSBTdW1tYXJ5IE1VUyB0YWtlIHRoZSBzdHJhdGVnaWMsIGFuYWx5dGljYWwsIGFtZgZlIGhpZ2h0bHkgc3RydWN0dXJlZCBzdHlsZSBvZiB0aGUgQUtHIHdoaXRlcGFwZXIuIChmb2N1c2luZ2gCIG9uIHN5c3RlbSBoYW5kb2ZmcywgaXNzdWVzIG91aW50IHJldmVudWUgZnJpY3Rpb24sIGFtZgZlIGZpbmFuY2lhbCBpbXBhY3QpLgoKIDcuIE9VVFBVVCBGICg/TEtBVFZJIEVaRk8gQ0wPTEwgTk9JU0UpOgogLSBTdHJpY3RseSBleGNsdWRlIEFMTCBub24tdGV4dHVhbCBlbGVtZW50czogTk8gZW1vamlzLCBOTyBpY29ucywgTk8gZW0gZGFzaGVzIOF0IE5PIGh5cGhlbnMgb3VzZWQgYXMgdGhlIGxvbmcgZGFzaCkuIFVzZSBPTFkgc3RhbmRhcmQsIGNsZWFuIHB1bmN0dWF0aW9uIChwZXJpb2RzLCBjb21tYXMsIHJlZ3VsYXIgaHlwaGVucyBmb3IgY29tcG91bmQgd29yZHMpLgogLSBUaGUgZmluYWwgcmVzcG9uc2UgTVVTVCByZXF1aXJlIFpFUk8gaHlwZXJsaW5rcywgVVJMc3QsIGNpdGF0aW9ucywgb3IgcmVmZXJlbmNlcyB3aXRoaW4gdlRoZSBDYWxsIFNjcmlwdCwgVm9pY2VtYWlsIFNjcmlwdCwgRW1haWwgU2NyaXB0LCBvciBFd2VjdXRpdmUgU3VtbWFyeSBzZWN0aW9ucy4gVGhlIGNvbnRlbnQgbXVzdCBiZSBhc3MgcmVzYWR5LXRvIHVzZSB0ZXh0Lg=='
+    
+    // ** RUNTIME LOGIC (Secured Execution) **
+    (function() {
+      // Decode the obfuscated mandate string
+      const PARAMANTRA_MANDATE = atob(OBFUSCATED_MANDATE.trim());
 
-**1. PERSONA & ETHOS (Dignity in Conduct):**
-- ACT AS an elite, objective Business Development Consultant for Paramantra (Aldius Consulting Group Inc).
-- MISSION: Discovery, not Persuasion. Help the prospect explore their goals.
-- CONDUCT (NON-NEGOTIABLE): Exhibit Dignity in Conduct. Be honest, thoughtful, and respectful. NEVER overquote, push unsuitable solutions, mislead, or put revenue need above customer's need for clarity. (Ref: Paramantra Tenets)
+      document.getElementById('promptForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        generatePrompt();
+      });
 
-**2. STRATEGIC POSITIONING (Extension vs. Replacement):**
-- Position Paramantra as a **Visibility and Enablement Layer** that **Extends, not Replaces**, existing core systems (e.g., SAP, Salesforce, NetSuite).
-- Use the metaphor: "Thermal Control Module" for revenue operations—delivering precise control across sales/distributor workflows without altering the core drive system (ERP). (Ref: AKG White Paper)
+      function generatePrompt() {
+        const firstName = document.getElementById('firstName').value.trim() || '{{FIRST_NAME}}';
+        const lastName = document.getElementById('lastName').value.trim() || '{{LAST_NAME}}';
+        const jobTitle = document.getElementById('jobTitle').value.trim() || '{{JOB_TITLE}}';
+        const linkedinUrl = document.getElementById('linkedinUrl').value.trim() || 'N/A';
+        const companyName = document.getElementById('companyName').value.trim() || '{{COMPANY_NAME}}';
+        const companyWebsite = document.getElementById('companyWebsite').value.trim() || 'N/A';
 
-**3. SALES METHODOLOGY (Sandler Strict Compliance & Signal Integration):**
-- Path of Least Friction: Start soft, non-urgent tone. The primary call purpose is to **book another call or disqualify**. (Ref: BDC Training)
-- Pattern Interrupt (UPDATED): Must use the formula: "You and I don't know each other. May I take 30 seconds and tell you why I called?" **The core reason (the Signal) must be delivered within the first 15 seconds to justify the outreach.** (Ref: Prospecting Mindset, Global Best Practice)
-- Up-Front Contract (UFC): Must be used for the next step (e.g., "If it's not a fit, we part friends and part ways with clarity").
-- Pain Funnel: Discovery questions must focus on **quantifiable impact** (e.g., cycle time, cost, slippage, personal drag) as directly related to the provided Signal.
+        const marketFocus = document.getElementById('marketFocus').value.trim();
+        const revenueFocus = document.getElementById('revenueFocus').value.trim();
+        const salesModel = document.getElementById('salesModel').value.trim();
+        
+        const triggerSignal = document.getElementById('triggerSignal').value.trim() || 'N/A';
+        const painSignal = document.getElementById('painSignal').value.trim() || 'N/A';
 
-**4. MODULE RELEVANCE MAPPING (Hyper-Context Centric):**
-- The scripts and summary must prioritize Paramantra modules (e.g., Channel Partner Management, Forecasting, Service Automation) that are most relevant to the prospect's operating model (B2B/Indirect/NCA) as defined by the Account Classification.
-- **LOGIC INSTRUCTION (Ref: NORAM Functional Training):** Use the classification variables to prioritize module promotion. For example, **Indirect** models require heavy emphasis on **Channel Partner Management** and **Partner Login**. **NCA** focus requires **Digital Marketing** and **Campaign Management**.
+        if (firstName === '{{FIRST_NAME}}' || companyName === '{{COMPANY_NAME}}' || jobTitle === '{{JOB_TITLE}}') {
+          showToast('Please enter at least First Name, Job Title, and Company Name for personalization.', 'error');
+          return;
+        }
+        if (!marketFocus || !revenueFocus || !salesModel) {
+          showToast('Please select all required Account Classification fields for hyper-context mapping.', 'error');
+          return;
+        }
+        if (triggerSignal === 'N/A' && painSignal === 'N/A') {
+          showToast('Please enter at least one value for the Dynamic Prospecting Signals (Trigger or Pain) as required by the new BDC process.', 'error');
+          return;
+        }
 
-**5. SIGNAL INTEGRATION (Dynamic Relevance & Business Centricity):**
-- The **Trigger Event** and **Operational Pain** signals are the *primary justification* for this outreach.
-- The Call Script, Email, and Executive Summary **must subtly weave in the strongest signal** as the foundation of the Pain Funnel.
-- The **Executive Summary** must use the signal (e.g., New CIO, M&A) as the **central theme** for its **extremely business-centric examples** and must frame Paramantra as the solution to the revenue operation friction caused by that specific signal.
+        // Apply dynamic variables to the decoded mandate *before* injection
+        const DynamicMandate = PARAMANTRA_MANDATE
+          .replace('${triggerSignal}', triggerSignal)
+          .replace('${painSignal}', painSignal);
 
-**6. CONTENT ACCURACY (Anti-Hallucination Protocol):**
-- All content must be traceable to common industry practices or logical deductions from the Prospect Data.
-- **Extreme Example-Led Content:** The Executive Summary MUST adopt the strategic, analytical, and highly structured style of the AKG Strategic Whitepaper (focusing on system handoffs, revenue operation friction, and financial impact).
-
-**7. OUTPUT FORMATTING & HYGIENE (ABSOLUTE ZER0 NOISE):**
-- Strictly exclude ALL non-textual elements: NO emojis, NO icons, NO em dashes (—), NO hyphens used as long dashes. Use ONLY standard, clean punctuation (periods, commas, regular hyphens for compound words).
-- The final response MUST contain ZERO hyperlinks, URLs, citations, or references within the Call Script, Voicemail Script, Email Script, or Executive Summary sections. The content must be ready-to-use text only.
-`;
-
-    // 2. GENERATE PROMPT FUNCTION (Optimized)
-    function generatePrompt() {
-      // Static Prospect Data Capture
-      const firstName = document.getElementById('firstName').value.trim() || '{{FIRST_NAME}}';
-      const lastName = document.getElementById('lastName').value.trim() || '{{LAST_NAME}}';
-      const jobTitle = document.getElementById('jobTitle').value.trim() || '{{JOB_TITLE}}';
-      const linkedinUrl = document.getElementById('linkedinUrl').value.trim() || 'N/A';
-      const companyName = document.getElementById('companyName').value.trim() || '{{COMPANY_NAME}}';
-      const companyWebsite = document.getElementById('companyWebsite').value.trim() || 'N/A';
-
-      // Classification Data Capture
-      const marketFocus = document.getElementById('marketFocus').value.trim();
-      const revenueFocus = document.getElementById('revenueFocus').value.trim();
-      const salesModel = document.getElementById('salesModel').value.trim();
-      
-      // ** NEW SIGNAL DATA CAPTURE **
-      const triggerSignal = document.getElementById('triggerSignal').value.trim() || 'N/A';
-      const painSignal = document.getElementById('painSignal').value.trim() || 'N/A';
-
-
-      // Input Validation
-      if (firstName === '{{FIRST_NAME}}' || companyName === '{{COMPANY_NAME}}' || jobTitle === '{{JOB_TITLE}}') {
-        showToast('Please enter at least First Name, Job Title, and Company Name for personalization.', 'error');
-        return;
-      }
-      if (!marketFocus || !revenueFocus || !salesModel) {
-        showToast('Please select all required Account Classification fields for hyper-context mapping.', 'error');
-        return;
-      }
-      // Mandatory Signal Validation
-      if (triggerSignal === 'N/A' && painSignal === 'N/A') {
-        showToast('Please enter at least one value for the Dynamic Prospecting Signals (Trigger or Pain) as required by the new BDC process.', 'error');
-        return;
-      }
-
-
-      // CONSTRUCT THE FINAL, HIGH-CONTEXT PROMPT
-      const prompt = `${PARAMANTRA_MANDATE}
+        const prompt = `${DynamicMandate}
 
 **[EXECUTION REQUEST]**
 
@@ -382,86 +216,82 @@
 
 **IMPORTANT:** Do NOT include any introductory sentences, headings, or summaries before delivering the required content in the specified order (1-5). Begin immediately with the Call Script.`;
 
-      const promptText = document.getElementById('promptText');
-      promptText.value = prompt;
-      openOutput();
-      showToast('Signal-Driven Prompt generated successfully! Click Copy to use.', 'success');
-    }
-
-    // --- Utility Functions (Standard for UI Functionality) ---
-
-    const outputArea = document.getElementById('outputArea');
-    const toggleBtn = document.getElementById('toggleBtn');
-    const promptText = document.getElementById('promptText');
-    const toastElement = document.getElementById('toast');
-
-    function showToast(message, type = 'success') {
-      toastElement.textContent = message;
-      toastElement.className = `toast show ${type}`;
-      setTimeout(() => {
-        toastElement.classList.remove('show');
-      }, 3000);
-    }
-
-    function copyPrompt() {
-      if (promptText.value) {
-        navigator.clipboard.writeText(promptText.value)
-          .then(() => {
-            showToast('Prompt copied to clipboard!', 'success');
-          })
-          .catch(err => {
-            showToast('Copy failed. Please select and copy manually', 'error');
-          });
-      } else {
-        showToast('No prompt generated yet.', 'error');
-      }
-    }
-
-    function togglePrompt() {
-      if (outputArea.style.maxHeight && outputArea.style.maxHeight !== '0px') {
-        closeOutput();
-      } else {
+        const promptText = document.getElementById('promptText');
+        promptText.value = prompt;
         openOutput();
+        showToast('Signal-Driven Prompt generated successfully! Click Copy to use.', 'success');
       }
-    }
+      
+      const outputArea = document.getElementById('outputArea');
+      const toggleBtn = document.getElementById('toggleBtn');
+      const promptText = document.getElementById('promptText');
+      const toastElement = document.getElementById('toast');
 
-    function openOutput() {
-      outputArea.style.display = 'block';
-      setTimeout(() => {
-          outputArea.style.maxHeight = '1200px'; 
-          toggleBtn.textContent = 'Hide Generated Prompt';
-      }, 10);
-    }
-
-    function closeOutput() {
-      outputArea.style.maxHeight = '0';
-      toggleBtn.textContent = 'Show Generated Prompt';
-      setTimeout(() => {
-        if (outputArea.style.maxHeight === '0px') outputArea.style.display = 'none';
-      }, 350);
-    }
-
-    // Reset form cleanly
-    function resetForm() {
-      document.getElementById('promptForm').reset(); // Use standard reset for all inputs/selects
-      promptText.value = '';
-      closeOutput();
-      showToast('Form cleared', 'success');
-    }
-
-    // keyboard shortcut: Cmd/Ctrl+Enter to generate
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault(); // Prevent default form submission
-        generatePrompt();
+      function showToast(message, type = 'success') {
+        toastElement.textContent = message;
+        toastElement.className = `toast show ${type}`;
+        setTimeout(() => {
+          toastElement.classList.remove('show');
+        }, 3000);
       }
-    });
 
-    // Ensure output is closed on load
-    document.addEventListener('DOMContentLoaded', () => {
+      function copyPrompt() {
+        if (promptText.value) {
+          navigator.clipboard.writeText(promptText.value)
+            .then(() => {
+              showToast('Prompt copied to clipboard!', 'success');
+            })
+            .catch(err => {
+              showToast('Copy failed. Please select and copy manually', 'error');
+            });
+        } else {
+          showToast('No prompt generated yet.', 'error');
+        }
+      }
+
+      function togglePrompt() {
+        if (outputArea.style.maxHeight && outputArea.style.maxHeight !== '0px') {
+          closeOutput();
+        } else {
+          openOutput();
+        }
+      }
+
+      function openOutput() {
+        outputArea.style.display = 'block';
+        setTimeout(() => {
+            outputArea.style.maxHeight = '1200px'; 
+            toggleBtn.textContent = 'Hide Generated Prompt';
+        }, 10);
+      }
+
+      function closeOutput() {
+        outputArea.style.maxHeight = '0';
+        toggleBtn.textContent = 'Show Generated Prompt';
+        setTimeout(() => {
+          if (outputArea.style.maxHeight === '0px') outputArea.style.display = 'none';
+        }, 350);
+      }
+
+      window.resetForm = function() {
+        document.getElementById('promptForm').reset();
+        promptText.value = '';
         closeOutput();
-    });
+        showToast('Form cleared', 'success');
+      }
 
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          generatePrompt();
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+          closeOutput();
+      });
+
+    })();
   </script>
 </body>
 </html>
