@@ -1,303 +1,47 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Paramantra BDC Prompt Generator</title>
-  <style>
-    :root{
-      --primary: #0f56d3;
-      --accent: #4b8fd4;
-      --bg: #f3f6fb;
-      --card: #ffffff;
-      --muted: #6b7280;
-      --success: #10b981;
-      --max-width: 920px;
-      --radius: 12px;
-    }
+You are an elite Business Development AI assistant for Paramantra (Aldius Consulting Group Inc), an enterprise CRM vendor founded March 12, 2008. Paramantra serves 80+ verticals with 250+ modules and specializes in complex, high-touch B2B sales cycles.
 
-    html,body{height:100%;margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:#222}
-    .wrap{max-width:var(--max-width);margin:24px auto;padding:20px}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 30px rgba(15,86,211,0.08);padding:22px;overflow:hidden}
-    .brand{display:flex;align-items:center;gap:16px;margin-bottom:8px}
-    .logo{max-height:56px;width:auto;display:block}
-    h1{font-size:1.4rem;margin:0;color:var(--primary);font-weight:700}
-    p.lead{margin:8px 0 18px;color:var(--muted);font-size:0.98rem}
+Task: produce immediately usable outbound content for a North American BDC:
+1) Call Script (Opening → Qualify → Value → Close). 2–3 minute flow.
+2) Voicemail Script (~45 seconds, spoken). 
+3) Email Script (subject line, 2–3 short paragraphs, soft CTA).
+Optionally: 4) Executive Summary (500–600 words) — strategic, consultant tone.
 
-    .form-row{display:block;margin-bottom:12px}
-    label{display:block;font-weight:700;color:var(--primary);margin-bottom:6px;font-size:0.95rem}
-    input[type="text"]{width:100%;padding:11px 12px;border:1px solid #d1d5db;border-radius:10px;font-size:0.98rem;box-sizing:border-box}
-    .controls{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+Prospect inputs (replace tokens):  
+FIRST_NAME: {{FIRST_NAME}}  
+LAST_NAME: {{LAST_NAME}}  
+JOB_TITLE: {{JOB_TITLE}}  
+LINKEDIN: {{LINKEDIN_URL}}  
+COMPANY: {{COMPANY_NAME}}  
+WEBSITE: {{COMPANY_WEBSITE}}
 
-    .btn{border:0;padding:12px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-size:0.98rem}
-    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 18px rgba(15,86,211,0.12)}
-    .btn-secondary{background:#eef2ff;color:var(--primary);border:1px solid rgba(15,86,211,0.08)}
-    .btn-ghost{background:#f8fafc;color:#111;border:1px solid #e6eefc}
+Research protocol (use public sources only):
+• If LINKEDIN not provided, search "{{FIRST_NAME}} {{LAST_NAME}} {{COMPANY}}" for role/context.  
+• Analyze COMPANY website and public docs for business model, projects, tech stack, recent news, hiring signals.  
+• Extract 3–5 verifiable business details to weave naturally into outputs.  
+• Limit personalization to business context only; do not reference personal social activity or private data.
 
-    /* Prompt area */
-    .prompt-controls{margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    #togglePrompt{background:#eff6ff;color:var(--primary);border-radius:10px;padding:10px 12px;border:1px solid rgba(15,86,211,0.08);cursor:pointer}
-    #outputArea{margin-top:14px;overflow:hidden;max-height:0;transition:max-height 320ms ease;padding:0 0}
-    #promptText{width:100%;height:360px;padding:14px;border-radius:10px;border:1px solid #e6e9ef;background:#fff;resize:vertical;font-family:ui-sans-serif,system-ui,Segoe UI,Arial,sans-serif;font-size:0.95rem;box-sizing:border-box}
-    .copy-row{display:flex;justify-content:flex-end;margin-top:10px}
-    .copy-btn{background:var(--accent);color:#fff;border-radius:10px;padding:10px 14px;font-weight:700;border:0;cursor:pointer}
+Output rules:
+• Do not mention Paramantra headquarters or office location anywhere in outbound scripts.  
+• Tone: professional, consultative, respectful, and concise. No hype, no pressure.  
+• Include 1–2 quantifiable outcomes where reasonable (eg. "% improvement", "days saved"), and cite source if from public data; otherwise qualify as an assumption.  
+• Use placeholders [TIME], [DATE], [PHONE_NUMBER] where applicable.  
+• Executive summary (if requested): 500–600 words; structure: Company context → Current state observations → Strategic opportunities → Paramantra fit (extension positioning). Write as a consultant, not a vendor. Avoid prescriptive language; use conditional phrasing ("could", "may", "opportunity to").
 
-    /* Toast */
-    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#111;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity 240ms ease,transform 240ms ease}
-    .toast.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(-6px)}
-
-    @media (max-width:640px){
-      .brand{flex-direction:column;align-items:center;gap:8px}
-      h1{text-align:center}
-      .controls{flex-direction:column}
-      .copy-row{justify-content:stretch}
-      .copy-btn{width:100%}
-      #promptText{height:280px}
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="card" role="main" aria-labelledby="pageTitle">
-      <div class="brand">
-        <img src="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp" alt="Paramantra logo" class="logo" />
-        <div style="flex:1">
-          <h1 id="pageTitle">Paramantra BDC Prompt Generator</h1>
-          <p class="lead">Enter prospect details and click Create Prompt. The generated master prompt is ready to copy into Copilot, Claude, Gemini, Perplexity, or any other AI model.</p>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <label for="firstName">Prospect First Name</label>
-        <input id="firstName" type="text" placeholder="e.g. Mike" autocomplete="given-name" />
-      </div>
-
-      <div class="form-row">
-        <label for="lastName">Prospect Last Name</label>
-        <input id="lastName" type="text" placeholder="e.g. Morrison" autocomplete="family-name" />
-      </div>
-
-      <div class="form-row">
-        <label for="jobTitle">Job Title</label>
-        <input id="jobTitle" type="text" placeholder="e.g. President" />
-      </div>
-
-      <div class="form-row">
-        <label for="linkedinUrl">LinkedIn URL</label>
-        <input id="linkedinUrl" type="text" placeholder="Paste LinkedIn URL if available" />
-      </div>
-
-      <div class="form-row">
-        <label for="companyName">Company Name</label>
-        <input id="companyName" type="text" placeholder="e.g. Morrison Contractors" />
-      </div>
-
-      <div class="form-row">
-        <label for="companyWebsite">Company Website</label>
-        <input id="companyWebsite" type="text" placeholder="e.g. https://www.morrisoncontractors.com" />
-      </div>
-
-      <div class="controls" aria-hidden="false">
-        <button class="btn btn-primary" onclick="generatePrompt()">Create Prompt</button>
-        <button id="togglePrompt" class="btn btn-secondary" onclick="togglePrompt()">Show Generated Prompt</button>
-        <button class="btn btn-ghost" onclick="resetForm()">Clear</button>
-      </div>
-
-      <div id="outputArea" aria-live="polite">
-        <textarea id="promptText" readonly aria-label="Generated master prompt"></textarea>
-        <div class="copy-row">
-          <button class="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script>
-    // Master prompt exactly as provided by you
-    const masterTemplate = `You are a highly experienced Business Development AI assistant for Paramantra, a premier SaaS-based CRM provider headquartered in Charlestown, Massachusetts. Paramantra specializes in delivering highly-customized CRM solutions across 80+ business verticals including manufacturing, real estate, healthcare, professional services, and technology. With over 18 years of market experience, Paramantra's platform features 250+ integrated modules and is renowned for exceptional user adoption rates, workflow optimization, and measurable ROI improvements.
-
-TASK: Generate hyper-personalized outbound sales content for a Business Development Consultant targeting North American B2B markets. Content must be immediately actionable and require no additional editing.
-
-REQUIRED OUTPUT:
-1. Call Script (Opening → Qualify → Value → Close, 2-3 minutes total)
-2. Voicemail Script (engaging, ~45 seconds when spoken)
-3. Email Script (professional with subject line, body, clear CTA)
-
-PROSPECT DATA PROVIDED:
-- First Name: {{FIRST_NAME}}
-- Last Name: {{LAST_NAME}}
-- Job Title: {{JOB_TITLE}}
-- LinkedIn URL: {{LINKEDIN_URL}}
-- Company Name: {{COMPANY_NAME}}
-- Company Website: {{COMPANY_WEBSITE}}
-
-RESEARCH PROTOCOL:
-Step 1: If LinkedIn URL unavailable, search "{{FIRST_NAME}} {{LAST_NAME}} {{COMPANY_NAME}}" for professional background and role responsibilities.
-Step 2: Analyze company website and public sources for business model, industry position, recent developments, and technology indicators.
-Step 3: Identify sector-specific CRM challenges (compliance, scalability, integration) and relevant industry benchmarks.
-Step 4: Extract 3-5 specific business details for natural incorporation into scripts.
-
-PERSONALIZATION REQUIREMENTS:
-- Use high-impact details: specific company projects, recent news, industry challenges
-- Integrate research seamlessly into conversation flow
-- Focus strictly on business context, avoid personal assumptions
-- Only use verifiable, recent information
-- Include quantifiable benefits with specific metrics
-- Connect Paramantra capabilities to sector-specific needs
-- Highlight unique advantages: 250+ modules, 18-year track record, 80+ verticals
-
-CONTENT STANDARDS:
-- Tone: Professional, consultative, confident, conversational
-- Style: Natural speech patterns, avoid corporate jargon
-- Structure: Clear section headers, logical flow, ready-to-use
-- Quality: Factually accurate, naturally conversational when read aloud
-- Placeholders: Use [TIME], [DATE], [PHONE_NUMBER] for customizable elements
-
-OUTPUT FORMAT:
+Deliver the outputs in this exact format:
 
 Call Script:
-Opening: [Attention-grabbing introduction with personalized business hook]
-Qualify: [Discovery questions about current challenges and systems]
-Value: [Tailored benefits with quantifiable outcomes specific to their industry]
-Close: [Clear next step with specific scheduling options]
+Opening:
+Qualify:
+Value:
+Close:
 
 Voicemail Script:
-[Complete 45-second script with compelling hook, brief value statement, and clear callback request]
+[~45s script]
 
 Email Script:
-Subject: [Compelling, personalized subject line]
-[Professional greeting with personalized business reference]
-[2-3 paragraphs with value proposition and relevant social proof]
-[Clear CTA with easy response options]
-[Professional signature with contact placeholders]
+Subject:
+Body:
 
-CRITICAL SUCCESS FACTORS:
-- Demonstrate genuine understanding of prospect's business context
-- Include measurable business benefits (efficiency gains, cost savings, productivity)
-- Ensure scripts flow naturally without awkward transitions
-- Provide specific, actionable next steps
-- Maintain professional credibility with accurate industry knowledge
+Executive Summary: [only when requested — 500–600 words]
 
-If research limitations occur, focus on industry-standard challenges while noting any assumptions made. Execute research systematically using available tools and prioritize factual accuracy over creative assumptions.`;
-
-    // UI helpers
-    const outputArea = document.getElementById('outputArea');
-    const promptText = document.getElementById('promptText');
-    const toast = document.getElementById('toast');
-    const toggleBtn = document.getElementById('togglePrompt');
-
-    function showToast(message, timeout = 2200) {
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, timeout);
-    }
-
-    function generatePrompt() {
-      const fields = {
-        FIRST_NAME: document.getElementById('firstName').value.trim(),
-        LAST_NAME: document.getElementById('lastName').value.trim(),
-        JOB_TITLE: document.getElementById('jobTitle').value.trim(),
-        LINKEDIN_URL: document.getElementById('linkedinUrl').value.trim(),
-        COMPANY_NAME: document.getElementById('companyName').value.trim(),
-        COMPANY_WEBSITE: document.getElementById('companyWebsite').value.trim()
-      };
-
-      // Start from the master template
-      let prompt = masterTemplate;
-
-      // Replace only the tokens for which we have non-empty input
-      Object.keys(fields).forEach(key => {
-        const value = fields[key];
-        const token = `{{${key}}}`;
-        if (value) {
-          // safe replace all occurrences
-          prompt = prompt.split(token).join(value);
-        }
-      });
-
-      // If fields are empty, leave the original {{PLACEHOLDER}} tokens in place
-      promptText.value = prompt;
-      openOutput();
-      showToast('Prompt generated');
-    }
-
-    function copyPrompt() {
-      const text = promptText.value || '';
-      if (!text) {
-        showToast('No prompt to copy');
-        return;
-      }
-
-      // Preferred modern API
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast('Prompt copied to clipboard');
-        }).catch(() => {
-          fallbackCopy(text);
-        });
-      } else {
-        fallbackCopy(text);
-      }
-    }
-
-    function fallbackCopy(text) {
-      // Fallback for older browsers
-      try {
-        promptText.select();
-        promptText.setSelectionRange(0, 999999);
-        document.execCommand('copy');
-        showToast('Prompt copied to clipboard');
-      } catch (e) {
-        showToast('Copy failed. Please select and copy manually');
-      }
-    }
-
-    function togglePrompt() {
-      if (outputArea.style.maxHeight && outputArea.style.maxHeight !== '0px') {
-        closeOutput();
-      } else {
-        openOutput();
-      }
-    }
-
-    function openOutput() {
-      outputArea.style.maxHeight = '1200px';
-      toggleBtn.textContent = 'Hide Generated Prompt';
-      outputArea.style.display = 'block';
-    }
-
-    function closeOutput() {
-      outputArea.style.maxHeight = '0';
-      toggleBtn.textContent = 'Show Generated Prompt';
-      // keep display set to block for smooth transitions; after transition hide to remove from flow
-      setTimeout(() => {
-        if (outputArea.style.maxHeight === '0px') outputArea.style.display = 'none';
-      }, 350);
-    }
-
-    // Reset form cleanly
-    function resetForm() {
-      document.getElementById('firstName').value = '';
-      document.getElementById('lastName').value = '';
-      document.getElementById('jobTitle').value = '';
-      document.getElementById('linkedinUrl').value = '';
-      document.getElementById('companyName').value = '';
-      document.getElementById('companyWebsite').value = '';
-      promptText.value = '';
-      closeOutput();
-      showToast('Form cleared');
-    }
-
-    // keyboard shortcut: Cmd/Ctrl+Enter to generate
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        generatePrompt();
-      }
-    });
-  </script>
-</body>
-</html>
+If research limits exist, note assumptions at the top of the executive summary and favor industry-standard benchmarks over speculation. Prioritize clarity, factual accuracy, and immediate actionability.
