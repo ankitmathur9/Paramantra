@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Paramantra BDC Prompt Generator</title>
   
-  <link rel="icon" type="image/webp" href="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp">
+  <link rel="icon" type="image/png" href="https://paramantra.com/wp-content/uploads/2022/04/Paramantra-Logo-e1754657963220.webp">
 
   <style>
     :root{
@@ -38,12 +38,12 @@
     .brand-section {
         margin-bottom: 24px;
         padding-bottom: 8px;
-        border-bottom: 2px solid var(--primary); /* Red line underneath the title section for emphasis */
+        border-bottom: 2px solid var(--primary); 
     }
     
     /* Logo Style */
     .brand-logo-img {
-        max-height: 40px; /* Constrain size */
+        max-height: 40px; 
         width: auto;
         display: block;
         margin-bottom: 4px;
@@ -51,7 +51,7 @@
 
     .brand-slogan {
         font-size: 1.1rem;
-        font-weight: 700; /* Bolder slogan */
+        font-weight: 700; 
         color: var(--primary); 
         margin: 0;
         letter-spacing: 0.2px;
@@ -68,7 +68,7 @@
         width:100%;
         padding:10px 12px;
         border:1px solid #ccc;
-        border-radius:8px; /* Slightly more rounded inputs */
+        border-radius:8px; 
         box-sizing:border-box;
         font-size:1rem;
         transition:border-color 0.2s, box-shadow 0.2s;
@@ -77,17 +77,17 @@
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     .required::after{content:'*';color:var(--primary);margin-left:4px} 
     
-    /* Buttons (Enhanced CTA) */
+    /* Buttons */
     .btn-primary,.btn-secondary{padding:12px 24px;border:none;border-radius:8px;font-size:1rem;cursor:pointer;font-weight:600; transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;}
     
     .btn-primary{
-        background: linear-gradient(180deg, #FF6F61 0%, var(--primary) 100%); /* Subtle Gradient */
+        background: linear-gradient(180deg, #FF6F61 0%, var(--primary) 100%); 
         color: var(--card); 
         box-shadow: 0 4px 10px rgba(234, 67, 53, 0.4); 
     }
     .btn-primary:hover{
         background:#cc332a;
-        transform: translateY(-1px); /* Subtle lift on hover */
+        transform: translateY(-1px); 
         box-shadow: 0 6px 15px rgba(234, 67, 53, 0.5); 
     }
     .btn-secondary{background:#f0f0f0;color:var(--accent);margin-left:12px; border: 1px solid #ddd;} 
@@ -98,7 +98,7 @@
     .output-section{margin-top:30px;position:relative}
     textarea{
         width:100%;height:400px;padding:15px;border:1px solid #ddd;
-        border-radius:8px; /* Consistent radius */
+        border-radius:8px; 
         box-sizing:border-box;font-size:0.85rem;font-family:Consolas,monospace;
         background:#f9f9f9;resize:none;line-height:1.4;display:block;color:var(--accent)
     }
@@ -111,6 +111,32 @@
     .toast.show{opacity:1;transform:translateY(0)}
     .toast.success{background:var(--success)}
     .toast.error{background:var(--error)}
+
+    /* --- Media Query for Mobile Optimization (The new addition) --- */
+    @media (max-width: 600px) {
+        /* Forces the 2-column grid sections to stack vertically on smaller screens */
+        .grid-2 {
+            grid-template-columns: 1fr;
+            gap: 0; 
+        }
+        .input-group {
+            margin-bottom: 15px; 
+        }
+        /* Stack the buttons too */
+        .btn-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .btn-primary, .btn-secondary {
+            width: 100%;
+            margin-left: 0 !important; 
+            margin-top: 10px;
+        }
+        .wrap {
+            padding: 15px; /* Slightly less padding on tiny screens */
+            margin: 15px auto;
+        }
+    }
   </style>
 </head>
 <body>
