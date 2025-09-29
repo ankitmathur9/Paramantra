@@ -240,11 +240,11 @@
             </header>
 
             <p style="color: var(--muted); margin-bottom: 24px;">
-                Enter the prospect details below. The system will auto-generate a high-context prompt embedding the **Paramantra ethos**, ensuring consistent, methodology-driven content creation.
+                Enter the prospect details below. The system will auto-generate a high-context prompt embedding the **Paramantra ethos** and **core value proposition**, ensuring consistent, methodology-driven content creation.
             </p>
 
             <form id="promptForm">
-                <h2>Prospect Information (Level 1 Data)</h2>
+                <h2>Prospect Information (Required)</h2>
                 <div class="grid-2">
                     <div class="input-group">
                         <label for="firstName" class="required">First Name</label>
@@ -259,40 +259,29 @@
                 <div class="grid-2">
                     <div class="input-group">
                         <label for="jobTitle" class="required">Job Title</label>
-                        <input type="text" id="jobTitle" placeholder="General Manager" required />
+                        <input type="text" id="jobTitle" placeholder="VP of Global Sales" required />
                     </div>
                     <div class="input-group">
                         <label for="companyName" class="required">Company Name</label>
-                        <input type="text" id="companyName" placeholder="ADAMS DISASTER AND RESTORATION INC" required />
+                        <input type="text" id="companyName" placeholder="Stellar Manufacturing Group" required />
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label for="companyWebsite" class="required">Company Website (e.g., adamsdry.com)</label>
-                    <input type="text" id="companyWebsite" placeholder="https://adamsdry.com/" required />
+                    <label for="companyWebsite" class="required">Company Website (e.g., stellarmanufacturing.com)</label>
+                    <input type="text" id="companyWebsite" placeholder="https://stellarmanufacturing.com" required />
+                </div>
+                
+                <h2>Additional Context (Optional Hook)</h2>
+                
+                <div class="input-group">
+                    <label for="prospectHook">Specific Prospect Hook or Known Challenge (E.g., "Recently announced expansion into APAC", "Field service backlog is high")</label>
+                    <input type="text" id="prospectHook" placeholder="Optional: Use public news or specific pain points for deeper personalization." />
                 </div>
 
                 <div class="input-group">
                     <label for="linkedinUrl">Prospect LinkedIn URL (Optional for deeper research)</label>
-                    <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/topaz-marin-94579b118/" />
-                </div>
-
-                <h2>BDC Strategy & Context (Level 2 Data)</h2>
-
-                <div class="input-group">
-                    <label for="painPointStr" class="required">Target Pain Point / Hook (Crucial for Executive Brief)</label>
-                    <input type="text" id="painPointStr" placeholder="Field Service Dispatch Efficiency & Compliance Tracking" required />
-                </div>
-
-                <div class="input-group">
-                    <label for="classificationStr" class="required">Business Classification (Guides Solution Mapping)</label>
-                    <select id="classificationStr" required>
-                        <option value="" disabled selected>Select Primary Classification (Choose the closest fit)</option>
-                        <option value="B2B, High-Touch After-Sales/Service, Custom Orders">B2B, High-Touch Service/Custom Orders (e.g., Disaster Restoration, Manufacturing)</option>
-                        <option value="B2B, New Client Acquisition, Indirect Sales (Channel Partner Focus)">B2B, NCA, Indirect Sales (Channel Partner Focus)</option>
-                        <option value="B2C, High-Volume Lead Generation, Standardized Process">B2C, High-Volume Lead Generation</option>
-                        <option value="B2B/B2C Mix, Complex Order-to-Cash Cycle">B2B/B2C Mix, Complex Order-to-Cash Cycle</option>
-                    </select>
+                    <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/janedoe" />
                 </div>
 
                 <div class="btn-row">
@@ -326,8 +315,8 @@
  
 **1. PERSONA & ETHOS:**
 - **ACT AS** an elite Level 5 Business Development AI Assistant for Paramantra (Aldius Consulting Group Inc), specializing in complex sales cycles (80+ verticals, 250+ modules).
-- **MISSION:** The purpose of the first contact is to secure a 15-minute Up Front Contract (UFC) meeting, not to sell.
-- **CONDUCT (Non-Negotiable):** Exhibit Dignity in Conduct. ALWAYS be honest, thoughtful, and respectful. NEVER overquote, push unsuitable solutions, or compare aggressively.
+- **MISSION:** Discovery, not Persuasion. The purpose of the first contact is to secure a 15-minute Up Front Contract (UFC) meeting, not to sell.
+- **CONDUCT (Non-Negotiable):** Exhibit Dignity in Conduct. ALWAYS be honest, thoughtful, and respectful. NEVER overquote, push unsuitable solutions, or mislead.
 
 **2. STRATEGIC POSITIONING:**
 - Position Paramantra as a **Visibility and Enablement Layer** that **Extends, not Replaces,** existing systems (e.g., SAP, Salesforce, NetSuite).
@@ -335,13 +324,12 @@
 
 **3. SALES METHODOLOGY (Mandatory Application):**
 - **Path of Least Friction:** Start soft. The first call purpose is to book another call or disqualify.
-- **Pattern Interrupt:** Begin calls with a 2-second silence/pause. Use the formula: "[Silence] You and I don't know each other. May I take 30 seconds and tell you why I called?" (Reference Prospecting Mindset).
+- **Pattern Interrupt:** Begin calls with a 2-second silence/pause. Use the formula: "[Silence] You and I don't know each other. May I take 30 seconds and tell you why I called?"
 - **Sandler Techniques:** Must apply **Up-Front Contract (UFC)** for next steps, and use the **Pain Funnel** to uncover real pain.
 - **Tone/Style:** Content must be written as a strategic, objective, third-party business consultant who has studied the operations, not as a vendor.
  
-**4. RESEARCH PROTOCOL (Mandatory Execution):**
-- Systematically execute comprehensive Prospect Intelligence, Company Deep Dive, and Industry Contextualization based on the provided data to create hyper-personalized content.
-- Use the **Classification Model** to anchor the pain point and the **Solution Mapping** to identify relevant Paramantra modules.
+**4. IMPLICIT CLASSIFICATION & CORE VALUE:**
+- **ASSUME** the prospect operates in a **B2B, High-Touch After-Sales/Service, Custom Orders** environment, where the core challenge is **revenue visibility and fragmented customer engagement data**. This anchors the solution mapping and is the default value if no specific hook is provided.
 `;
 
         // 2. GENERATE PROMPT FUNCTION
@@ -352,45 +340,49 @@
             const linkedinUrl = document.getElementById('linkedinUrl').value.trim();
             const companyName = document.getElementById('companyName').value.trim();
             const companyWebsite = document.getElementById('companyWebsite').value.trim();
-            const painPointStr = document.getElementById('painPointStr').value.trim(); // CRITICAL
-            const classificationStr = document.getElementById('classificationStr').value.trim(); // CRITICAL
+            const prospectHook = document.getElementById('prospectHook').value.trim(); // NEW OPTIONAL FIELD
 
-            // Simple validation check
-            if (!firstName || !lastName || !jobTitle || !companyName || !companyWebsite || !painPointStr || !classificationStr) {
+            // Simple validation check for required fields (Level 1 Data)
+            if (!firstName || !lastName || !jobTitle || !companyName || !companyWebsite) {
                 showToast('Please fill out all required fields marked with *.', 'error');
                 return;
             }
 
+            // Define the hook/pain point for the AI, using the BDC input or the system default.
+            const targetPainPoint = prospectHook 
+                ? prospectHook 
+                : "Indirect sales visibility, managing distributed service teams, and fragmented customer data (the core Paramantra value proposition).";
+            
             // CONSTRUCT THE FINAL, HIGH-CONTEXT PROMPT
             const prompt = `${PARAMANTRA_MANDATE}
  
 **[EXECUTION REQUEST - LEVEL 5 BDC LEADER BRIEFING]**
  
-**PROSPECT DATA (8 Hyper-Personalization Variables):**
+**PROSPECT DATA (Hyper-Personalization Variables):**
 - First Name: ${firstName}
 - Last Name: ${lastName}
 - Job Title: ${jobTitle}
 - Company Name: ${companyName}
 - Company Website: ${companyWebsite}
 - LinkedIn URL: ${linkedinUrl}
-- **Target Pain Point (Hook)**: ${painPointStr}
-- **Business Classification (Solution Map Anchor)**: ${classificationStr}
+- **Primary Focus/Hook**: ${targetPainPoint}
  
-**TASK:** Generate the following four deliverables based on the rules and context you have internalized above.
+**TASK:** Generate the following four deliverables based on the rules and context you have internalized above:
  
-1. **EXECUTIVE BRIEF (500-600 words - IGNITE CURIOSITY):** * **Objective**: Ignite interest & curiosity by demonstrating a profound, evidence-based understanding of the prospect's specific challenges related to **${painPointStr}** within the **${classificationStr}** model.
+1. **EXECUTIVE BRIEF (500-600 words - IGNITE CURIOSITY):**
+    * **Objective**: Ignite interest & curiosity by demonstrating a profound, evidence-based understanding of the prospect's specific challenges related to **${targetPainPoint}**.
     * **Content**: Create **1-2 specific, hypothetical, but highly realistic business scenarios** at ${companyName} to illustrate the pain. Detail **2-3 Paramantra modules** that would act as a non-disruptive **EXTENSION** to solve the problem.
  
 2. **CALL SCRIPT (2-3 min flow):** Opening (Pattern Interrupt) → Qualify (Pain Funnel Discovery) → Value (Extension Focus) → Close (UFC Next Step). Use placeholder **[PHONE_NUMBER]**.
  
 3. **VOICEMAIL SCRIPT (Consultative, ~45 seconds):** Must employ a Pattern Interrupt. Use placeholder **[PHONE_NUMBER]**.
  
-4. **EMAIL SCRIPT:** Professional, empathetic body. The Subject must be compelling and personalized, relating directly to the **${painPointStr}**. Use placeholders **[TIME], [DATE], [PHONE_NUMBER]**.
+4. **EMAIL SCRIPT:** Professional, empathetic body. The Subject must be compelling and personalized, relating directly to the **${targetPainPoint}**. Use placeholders **[TIME], [DATE], [PHONE_NUMBER]**.
  
 **CRITICAL REQUIREMENT: Begin your response with the EXECUTIVE BRIEF. Ensure the tone is consultative and avoids vendor hyperbole.**`;
 
-            const promptText = document.getElementById('promptText');
-            promptText.value = prompt;
+            const promptTextElement = document.getElementById('promptText');
+            promptTextElement.value = prompt;
             openOutput();
             showToast('Prompt generated successfully! Click Copy to use.', 'success');
         }
@@ -435,7 +427,8 @@
         function openOutput() {
             outputArea.style.display = 'block';
             setTimeout(() => {
-                outputArea.style.maxHeight = promptTextElement.scrollHeight + 100 + 'px'; // Dynamic Height
+                // Set max height high enough to show content, using scrollHeight as a base
+                outputArea.style.maxHeight = promptTextElement.scrollHeight + 100 + 'px'; 
                 toggleBtn.textContent = 'Hide Generated Prompt';
             }, 10);
         }
@@ -456,8 +449,7 @@
             document.getElementById('linkedinUrl').value = '';
             document.getElementById('companyName').value = '';
             document.getElementById('companyWebsite').value = '';
-            document.getElementById('painPointStr').value = '';
-            document.getElementById('classificationStr').value = '';
+            document.getElementById('prospectHook').value = ''; 
             promptTextElement.value = '';
             closeOutput();
             showToast('Form cleared', 'success');
