@@ -6,54 +6,53 @@
   <title>Paramantra BDC Prompt Generator</title>
   <style>
     :root{
-      /* --- PARAMANTRA BRAND COLORS --- */
-      --primary: #004D99; /* Deep Navy Blue */
-      --accent: #FF7F00; /* Vibrant Orange */
+      /* --- PARAMANTRA BRAND COLORS (Red/Black inspired by screenshot) --- */
+      --primary: #EA4335; /* Prominent Red from screenshot (e.g., LOGIN button, 'Recurring Success') */
+      --accent: #222222; /* Deep Black/Dark Gray for strong contrast and professional feel */
       /* ------------------------------- */
-      --bg: #f3f6fb;
-      --card: #ffffff;
+      --bg: #f3f6fb; /* Light background remains for readability */
+      --card: #ffffff; /* White card background for content blocks */
       --muted: #6b7280;
       --success: #10b981;
       --error: #ef4444;
       --max-width: 920px;
       --radius: 12px;
     }
-    html,body{height:100%;margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:#222}
+    html,body{height:100%;margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:var(--accent)} /* Main text color updated to accent */
     .wrap{max-width:var(--max-width);margin:24px auto;padding:20px}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,77,153,0.08);padding:22px;overflow:hidden}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,0,0,0.08);padding:22px;overflow:hidden} /* Adjusted shadow for new colors */
     .brand{display:flex;align-items:center;gap:16px;margin-bottom:8px}
-    /* Updated styling for the brand text element */
     .brand-logo-text{
         font-size: 1.8rem;
         font-weight: 900;
-        color: var(--primary);
+        color: var(--primary); /* Brand text uses the new red */
         letter-spacing: 0.5px;
         margin-right: 10px;
     }
-    h1{font-size:1.4rem;margin:0;color:var(--primary);font-weight:700}
-    h2{font-size:1.1rem;margin:0 0 16px 0;color:var(--primary);font-weight:600;border-bottom:1px solid #eee;padding-bottom:8px}
+    h1{font-size:1.4rem;margin:0;color:var(--accent);font-weight:700} /* Headings use the new dark accent */
+    h2{font-size:1.1rem;margin:0 0 16px 0;color:var(--accent);font-weight:600;border-bottom:1px solid #eee;padding-bottom:8px} /* Headings use the new dark accent */
     .input-group{margin-bottom:16px}
-    label{display:block;margin-bottom:6px;font-weight:500;color:#333}
+    label{display:block;margin-bottom:6px;font-weight:500;color:var(--accent)} /* Labels use the new dark accent */
     input[type="text"]{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:1rem;transition:border-color 0.2s}
-    input[type="text"]:focus{border-color:var(--primary);outline:none}
+    input[type="text"]:focus{border-color:var(--primary);outline:none} /* Input focus uses the new red */
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     .btn-primary,.btn-secondary{padding:10px 18px;border:none;border-radius:6px;font-size:1rem;cursor:pointer;transition:background-color 0.2s,box-shadow 0.2s;font-weight:600}
-    .btn-primary{background:var(--primary);color:var(--card)}
-    .btn-primary:hover{background:#003366} /* Darker blue on hover */
-    .btn-secondary{background:#e5e7eb;color:#374151;margin-left:12px}
+    .btn-primary{background:var(--primary);color:var(--card)} /* Primary button uses the new red */
+    .btn-primary:hover{background:#cc332a} /* Slightly darker red on hover */
+    .btn-secondary{background:#e5e7eb;color:var(--accent);margin-left:12px} /* Secondary button text uses the new dark accent */
     .btn-secondary:hover{background:#d1d5db}
     .output-section{margin-top:24px;position:relative}
     .output-section h2{margin-bottom:10px}
-    textarea{width:100%;height:400px;padding:15px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:0.85rem;font-family:Consolas,monospace;background:#f9f9f9;resize:none;line-height:1.4;display:block}
+    textarea{width:100%;height:400px;padding:15px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:0.85rem;font-family:Consolas,monospace;background:#f9f9f9;resize:none;line-height:1.4;display:block;color:var(--accent)} /* Textarea text color updated */
     #outputArea{transition:max-height 0.3s ease-in-out;overflow:hidden;max-height:0;display:none}
-    .btn-copy{position:absolute;top:5px;right:0;background:var(--accent);color:var(--card);padding:5px 10px;border-radius:4px;font-size:0.8rem}
-    .btn-copy:hover{background:#cc6600} /* Darker orange on hover */
+    .btn-copy{position:absolute;top:5px;right:0;background:var(--accent);color:var(--card);padding:5px 10px;border-radius:4px;font-size:0.8rem} /* Copy button uses the new dark accent */
+    .btn-copy:hover{background:#333333} /* Slightly darker dark accent on hover */
     .btn-row{display:flex;justify-content:flex-start;align-items:center;margin-top:16px}
     .toast{position:fixed;bottom:20px;right:20px;padding:10px 20px;border-radius:6px;color:var(--card);font-weight:500;z-index:1000;opacity:0;transition:opacity 0.3s,transform 0.3s;transform:translateY(20px)}
     .toast.show{opacity:1;transform:translateY(0)}
     .toast.success{background:var(--success)}
     .toast.error{background:var(--error)}
-    .required::after{content:'*';color:var(--error);margin-left:4px}
+    .required::after{content:'*';color:var(--primary);margin-left:4px} /* Required asterisk uses the new red */
   </style>
 </head>
 <body>
@@ -64,7 +63,7 @@
         <h1>BDC Hyper-Personalization Prompt Generator</h1>
       </header>
       
-      <p style="color: var(--muted); margin-bottom: 24px;">Enter the prospect details below. The system will auto-generate a high-context prompt embedding the **Paramantra ethos**, ensuring consistent, methodology-driven content creation.</p>
+      <p style="color: var(--accent); margin-bottom: 24px;">Enter the prospect details below. The system will auto-generate a high-context prompt embedding the **Paramantra ethos**, ensuring consistent, methodology-driven content creation.</p>
       
       <form id="promptForm">
         <h2>Prospect Information (Required for Personalization)</h2>
@@ -125,7 +124,7 @@
       generatePrompt();
     });
 
-    // --- MOTHER SUPERIOR PROMPT ---
+    // --- MOTHER SUPERIOR PROMPT (Zero Noise Mandate) ---
 
     // 1. DEFINE THE PARAMANTRA MANDATE (The AI's DNA)
     const PARAMANTRA_MANDATE = `
@@ -201,85 +200,7 @@
       showToast('Prompt generated successfully! Click Copy to use.', 'success');
     }
 
-    // --- Utility Functions ---
+    // --- Utility Functions (Standard for UI Functionality) ---
 
     const outputArea = document.getElementById('outputArea');
-    const toggleBtn = document.getElementById('toggleBtn');
-    const promptText = document.getElementById('promptText');
-    const toastElement = document.getElementById('toast');
-
-    function showToast(message, type = 'success') {
-      toastElement.textContent = message;
-      toastElement.className = `toast show ${type}`;
-      setTimeout(() => {
-        toastElement.classList.remove('show');
-      }, 3000);
-    }
-
-    function copyPrompt() {
-      if (promptText.value) {
-        navigator.clipboard.writeText(promptText.value)
-          .then(() => {
-            showToast('Prompt copied to clipboard!', 'success');
-          })
-          .catch(err => {
-            showToast('Copy failed. Please select and copy manually', 'error');
-          });
-      } else {
-        showToast('No prompt generated yet.', 'error');
-      }
-    }
-
-    function togglePrompt() {
-      if (outputArea.style.maxHeight && outputArea.style.maxHeight !== '0px') {
-        closeOutput();
-      } else {
-        openOutput();
-      }
-    }
-
-    function openOutput() {
-      outputArea.style.display = 'block';
-      setTimeout(() => {
-          outputArea.style.maxHeight = '1200px'; 
-          toggleBtn.textContent = 'Hide Generated Prompt';
-      }, 10);
-    }
-
-    function closeOutput() {
-      outputArea.style.maxHeight = '0';
-      toggleBtn.textContent = 'Show Generated Prompt';
-      setTimeout(() => {
-        if (outputArea.style.maxHeight === '0px') outputArea.style.display = 'none';
-      }, 350);
-    }
-
-    // Reset form cleanly
-    function resetForm() {
-      document.getElementById('firstName').value = '';
-      document.getElementById('lastName').value = '';
-      document.getElementById('jobTitle').value = '';
-      document.getElementById('linkedinUrl').value = '';
-      document.getElementById('companyName').value = '';
-      document.getElementById('companyWebsite').value = '';
-      promptText.value = '';
-      closeOutput();
-      showToast('Form cleared', 'success');
-    }
-
-    // keyboard shortcut: Cmd/Ctrl+Enter to generate
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault(); // Prevent default form submission
-        generatePrompt();
-      }
-    });
-
-    // Ensure output is closed on load
-    document.addEventListener('DOMContentLoaded', () => {
-        closeOutput();
-    });
-
-  </script>
-</body>
-</html>
+    const toggleBtn
