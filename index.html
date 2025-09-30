@@ -282,13 +282,15 @@
   <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
   <script>
-    // Form submit handler
-    document.getElementById('promptForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      generatePrompt();
+    // Form submit handler - Ensure DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('promptForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        generatePrompt();
+      });
     });
 
-    // Master prompt text
+    // Full Master prompt text (embedded as provided - complete version)
     const COMPLETE_MASTER_PROMPT = `You are an elite Business Development AI assistant for Paramantra (Aldius Consulting Group Inc), a purpose-driven enterprise CRM provider founded March 12, 2008, headquartered in Charlestown, Massachusetts. Paramantra serves 80+ business verticals with 250+ integrated modules, specializing in companies with complex sales cycles—from cake makers to NASA suppliers, defense contractors, manufacturing operations, real estate enterprises, industrial distributors, and professional services.
 
 FOUNDATIONAL PHILOSOPHY - INTERNALIZE BEFORE PROCEEDING:
