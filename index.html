@@ -5,122 +5,360 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Paramantra BDC Hyper-Personalization Engine</title>
   <style>
-    :root{
-      --primary: #004D99;
-      --accent: #FF7F00;
-      --bg: #f3f6fb;
+    /* Paramanta-inspired color palette */
+    :root {
+      --primary: #004d99; /* deep blue */
+      --accent: #ff7f00;  /* bright orange */
+      --bg: #f9fbfd;      /* very light blue/white */
       --card: #ffffff;
       --muted: #6b7280;
       --success: #10b981;
       --error: #ef4444;
       --max-width: 920px;
       --radius: 12px;
+      --font-sans: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
-    html,body{height:100%;margin:0;background:var(--bg);font-family:"Segoe UI",Arial,sans-serif;color:#222}
-    .wrap{max-width:var(--max-width);margin:24px auto;padding:20px}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 30px rgba(0,77,153,0.08);padding:22px;overflow:hidden}
-    .brand{display:flex;align-items:center;gap:16px;margin-bottom:8px}
-    .brand-logo-text{font-size:1.8rem;font-weight:900;color:var(--primary);letter-spacing:0.5px;margin-right:10px}
-    h1{font-size:1.4rem;margin:0;color:var(--primary);font-weight:700}
-    h2{font-size:1.1rem;margin:0 0 16px 0;color:var(--primary);font-weight:600;border-bottom:1px solid #eee;padding-bottom:8px}
-    .input-group{margin-bottom:16px}
-    label{display:block;margin-bottom:6px;font-weight:500;color:#333}
-    input[type="text"]{width:100%;padding:10px 12px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:1rem;transition:border-color 0.2s}
-    input[type="text"]:focus{border-color:var(--primary);outline:none}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-    .btn-primary,.btn-secondary{padding:10px 18px;border:none;border-radius:6px;font-size:1rem;cursor:pointer;transition:background-color 0.2s,box-shadow 0.2s;font-weight:600}
-    .btn-primary{background:var(--primary);color:var(--card)}
-    .btn-primary:hover{background:#003366}
-    .btn-secondary{background:#e5e7eb;color:#374151;margin-left:12px}
-    .btn-secondary:hover{background:#d1d5db}
-    .output-section{margin-top:24px;position:relative}
-    .output-section h2{margin-bottom:10px}
-    textarea{width:100%;height:400px;padding:15px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:0.85rem;font-family:Consolas,monospace;background:#f9f9f9;resize:none;line-height:1.4;display:block}
-    #outputArea{transition:max-height 0.3s ease-in-out;overflow:hidden;max-height:0;display:none}
-    .btn-copy{position:absolute;top:5px;right:0;background:var(--accent);color:var(--card);padding:5px 10px;border-radius:4px;font-size:0.8rem}
-    .btn-copy:hover{background:#cc6600}
-    .btn-row{display:flex;justify-content:flex-start;align-items:center;margin-top:16px}
-    .toast{position:fixed;bottom:20px;right:20px;padding:10px 20px;border-radius:6px;color:var(--card);font-weight:500;z-index:1000;opacity:0;transition:opacity 0.3s,transform 0.3s;transform:translateY(20px)}
-    .toast.show{opacity:1;transform:translateY(0)}
-    .toast.success{background:var(--success)}
-    .toast.error{background:var(--error)}
-    .required::after{content:'*';color:var(--error);margin-left:4px}
-    .info-box{background:#e8f4f8;border-left:4px solid var(--primary);padding:12px;margin-bottom:20px;border-radius:4px;font-size:0.9rem}
+
+    /* Disable text selection globally except textarea */
+    body {
+      margin: 0;
+      height: 100%;
+      background: var(--bg);
+      font-family: var(--font-sans);
+      color: #222;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    textarea {
+      user-select: text !important;
+    }
+
+    .wrap {
+      max-width: var(--max-width);
+      margin: 24px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 30px rgba(0, 77, 153, 0.12);
+      padding: 28px 32px;
+      overflow: hidden;
+      border: 1px solid #d1e3f8;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .brand-logo-text {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+      margin-right: 10px;
+      font-family: 'Segoe UI Black', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: text !important;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin: 0;
+      color: var(--primary);
+      font-weight: 700;
+      user-select: text !important;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      margin: 0 0 18px 0;
+      color: var(--primary);
+      font-weight: 600;
+      border-bottom: 2px solid #d1e3f8;
+      padding-bottom: 10px;
+      user-select: text !important;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #1a1a1a;
+      user-select: text !important;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      font-family: var(--font-sans);
+      user-select: text !important;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      padding: 12px 22px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s, box-shadow 0.3s;
+      font-weight: 700;
+      user-select: none;
+      font-family: var(--font-sans);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--card);
+      box-shadow: 0 4px 12px rgba(0, 77, 153, 0.3);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background: #003366;
+      box-shadow: 0 6px 18px rgba(0, 51, 102, 0.5);
+      outline: none;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+      margin-left: 14px;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+    }
+
+    .btn-secondary:hover,
+    .btn-secondary:focus {
+      background: #cbd5e1;
+      color: #1e293b;
+      outline: none;
+    }
+
+    .output-section {
+      margin-top: 28px;
+      position: relative;
+      user-select: text !important;
+    }
+
+    #outputArea {
+      transition: max-height 0.4s ease-in-out;
+      overflow: hidden;
+      max-height: 0;
+      display: none;
+      margin-top: 12px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 400px;
+      padding: 18px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 0.9rem;
+      font-family: Consolas, Monaco, 'Courier New', monospace;
+      background: #f9fbfd;
+      resize: none;
+      line-height: 1.5;
+      user-select: text !important;
+    }
+
+    .btn-copy {
+      position: absolute;
+      top: 8px;
+      right: 0;
+      background: var(--accent);
+      color: var(--card);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 3px 10px rgba(255, 127, 0, 0.5);
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-copy:hover,
+    .btn-copy:focus {
+      background: #cc6600;
+      outline: none;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 14px 26px;
+      border-radius: 10px;
+      color: var(--card);
+      font-weight: 600;
+      z-index: 10000;
+      opacity: 0;
+      transition: opacity 0.4s, transform 0.4s;
+      transform: translateY(20px);
+      font-family: var(--font-sans);
+      user-select: none;
+      box-shadow: 0 4px 14px rgba(0, 77, 153, 0.3);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      background: var(--success);
+    }
+
+    .toast.error {
+      background: var(--error);
+    }
+
+    .required::after {
+      content: '*';
+      color: var(--error);
+      margin-left: 6px;
+      user-select: none;
+    }
+
+    .info-box {
+      background: #e8f4f8;
+      border-left: 5px solid var(--primary);
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      border-radius: 6px;
+      font-size: 1rem;
+      color: #1e293b;
+      user-select: text !important;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
+    <div class="card" role="main" aria-label="Paramantra BDC Hyper-Personalization Engine">
       <header class="brand">
-        <div class="brand-logo-text">PARAMANTRA</div>
+        <div class="brand-logo-text" aria-label="Paramantra logo text">PARAMANTRA</div>
         <h1>BDC Hyper-Personalization Engine</h1>
       </header>
       
-      <div class="info-box">
+      <div class="info-box" role="region" aria-live="polite">
         <strong>Purpose:</strong> This tool generates AI prompts embedding Paramantra's complete philosophy, 18+ years expertise, Sandler methodology, and solution mapping framework. Output includes: Executive Summary (500-600 words with assumptive business examples), Call Script (Pattern Interrupt → Pain Funnel → UFC Close), Voicemail Script, and Email Script.
       </div>
       
-      <form id="promptForm">
+      <form id="promptForm" aria-describedby="formInstructions">
         <h2>Prospect Information</h2>
         
         <div class="grid-2">
           <div class="input-group">
             <label for="firstName" class="required">First Name</label>
-            <input type="text" id="firstName" placeholder="Mike" required />
+            <input type="text" id="firstName" placeholder="Mike" required autocomplete="given-name" />
           </div>
           <div class="input-group">
             <label for="lastName" class="required">Last Name</label>
-            <input type="text" id="lastName" placeholder="Morrison" required />
+            <input type="text" id="lastName" placeholder="Morrison" required autocomplete="family-name" />
           </div>
         </div>
 
         <div class="grid-2">
           <div class="input-group">
             <label for="jobTitle" class="required">Job Title</label>
-            <input type="text" id="jobTitle" placeholder="President" required />
+            <input type="text" id="jobTitle" placeholder="President" required autocomplete="organization-title" />
           </div>
           <div class="input-group">
             <label for="companyName" class="required">Company Name</label>
-            <input type="text" id="companyName" placeholder="Morrison Contractors" required />
+            <input type="text" id="companyName" placeholder="Morrison Contractors" required autocomplete="organization" />
           </div>
         </div>
         
         <div class="input-group">
           <label for="linkedinUrl">Prospect LinkedIn URL (Optional)</label>
-          <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/mike-morrison-80370450/" />
+          <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/mike-morrison-80370450/" autocomplete="url" />
         </div>
         
         <div class="input-group">
           <label for="companyWebsite">Company Website (Optional but Recommended)</label>
-          <input type="text" id="companyWebsite" placeholder="www.morrisoncontractors.com" />
+          <input type="text" id="companyWebsite" placeholder="www.morrisoncontractors.com" autocomplete="url" />
         </div>
         
         <div class="btn-row">
-          <button type="submit" class="btn-primary">Generate Complete AI Prompt</button>
-          <button type="button" class="btn-secondary" onclick="resetForm()">Clear Form</button>
+          <button type="submit" class="btn-primary" aria-label="Generate Complete AI Prompt">Generate Complete AI Prompt</button>
+          <button type="button" class="btn-secondary" onclick="resetForm()" aria-label="Clear Form">Clear Form</button>
         </div>
       </form>
 
-      <div class="output-section">
-        <button id="toggleBtn" class="btn-secondary" style="margin: 16px 0 8px 0;" onclick="togglePrompt()">Show Generated Prompt</button>
-        <div id="outputArea">
-          <textarea id="promptText" readonly></textarea>
-          <button class="btn-copy" onclick="copyPrompt()">Copy Prompt</button>
+      <div class="output-section" aria-live="polite" aria-atomic="true">
+        <button id="toggleBtn" class="btn-secondary" style="margin: 16px 0 8px 0;" onclick="togglePrompt()" aria-expanded="false" aria-controls="outputArea">Show Generated Prompt</button>
+        <div id="outputArea" tabindex="0" aria-label="Generated AI Prompt Output">
+          <textarea id="promptText" readonly aria-readonly="true" aria-multiline="true"></textarea>
+          <button class="btn-copy" onclick="copyPrompt()" aria-label="Copy Prompt to Clipboard">Copy Prompt</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
   <script>
-    // Event listener for form submission
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // Disable common developer tools and copy shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && ['U', 'S', 'P', 'A', 'C'].includes(e.key.toUpperCase()))
+      ) {
+        e.preventDefault();
+        alert('This action is disabled.');
+      }
+    });
+
+    // Form submit handler
     document.getElementById('promptForm').addEventListener('submit', (e) => {
       e.preventDefault();
       generatePrompt();
     });
 
-    // The large master prompt string (truncated here for brevity)
+    // Large master prompt string (truncated here for brevity)
     const COMPLETE_MASTER_PROMPT = `You are an elite Business Development AI assistant for Paramantra (Aldius Consulting Group Inc), a purpose-driven enterprise CRM provider founded March 12, 2008, headquartered in Charlestown, Massachusetts. Paramantra serves 80+ business verticals with 250+ integrated modules, specializing in companies with complex sales cycles—from cake makers to NASA suppliers, defense contractors, manufacturing operations, real estate enterprises, industrial distributors, and professional services.
 
 [... full prompt content omitted for brevity, use your full prompt here ...]
@@ -191,67 +429,11 @@ CRITICAL EXECUTION REQUIREMENTS:
 
 Generate all four deliverables now.`;
 
-      // Set the prompt text area value
       document.getElementById('promptText').value = finalPrompt;
-
-      // Show the output area
       openOutput();
-
-      // Show success toast
       showToast('Complete AI prompt generated successfully! Copy and paste into your AI tool (Claude, ChatGPT, Gemini, Perplexity, etc.)', 'success');
     }
 
-    // Show output area function
+    // Show output area
     function openOutput() {
-      const outputArea = document.getElementById('outputArea');
-      outputArea.style.display = 'block';
-      outputArea.style.maxHeight = '600px';
-      document.getElementById('toggleBtn').textContent = 'Hide Generated Prompt';
-    }
-
-    // Toggle output area visibility
-    function togglePrompt() {
-      const outputArea = document.getElementById('outputArea');
-      const toggleBtn = document.getElementById('toggleBtn');
-      if (outputArea.style.display === 'block') {
-        outputArea.style.display = 'none';
-        outputArea.style.maxHeight = '0';
-        toggleBtn.textContent = 'Show Generated Prompt';
-      } else {
-        outputArea.style.display = 'block';
-        outputArea.style.maxHeight = '600px';
-        toggleBtn.textContent = 'Hide Generated Prompt';
-      }
-    }
-
-    // Copy prompt text to clipboard
-    function copyPrompt() {
-      const promptText = document.getElementById('promptText');
-      promptText.select();
-      promptText.setSelectionRange(0, 99999); // For mobile devices
-      document.execCommand('copy');
-      showToast('Prompt copied to clipboard!', 'success');
-    }
-
-    // Reset form and hide output
-    function resetForm() {
-      document.getElementById('promptForm').reset();
-      document.getElementById('promptText').value = '';
-      const outputArea = document.getElementById('outputArea');
-      outputArea.style.display = 'none';
-      outputArea.style.maxHeight = '0';
-      document.getElementById('toggleBtn').textContent = 'Show Generated Prompt';
-    }
-
-    // Show toast notification
-    function showToast(message, type = 'success') {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = `toast show ${type}`;
-      setTimeout(() => {
-        toast.className = 'toast';
-      }, 3000);
-    }
-  </script>
-</body>
-</html>
+      const outputArea =
