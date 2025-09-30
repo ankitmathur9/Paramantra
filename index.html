@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Paramantra BDC Hyper-Personalization Engine</title>
   <style>
-    /* Paramanta-inspired color palette */
     :root {
-      --primary: #004d99; /* deep blue */
-      --accent: #ff7f00;  /* bright orange */
-      --bg: #f9fbfd;      /* very light blue/white */
+      --primary: #004d99;
+      --accent: #ff7f00;
+      --bg: #f9fbfd;
       --card: #ffffff;
       --muted: #6b7280;
       --success: #10b981;
@@ -18,63 +17,43 @@
       --radius: 12px;
       --font-sans: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     }
-
-    /* Disable text selection globally except textarea */
     body {
       margin: 0;
-      height: 100%;
       background: var(--bg);
       font-family: var(--font-sans);
       color: #222;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
     }
-    textarea {
-      user-select: text !important;
-    }
-
     .wrap {
       max-width: var(--max-width);
       margin: 24px auto;
       padding: 20px;
     }
-
     .card {
       background: var(--card);
       border-radius: var(--radius);
       box-shadow: 0 8px 30px rgba(0, 77, 153, 0.12);
       padding: 28px 32px;
-      overflow: hidden;
       border: 1px solid #d1e3f8;
     }
-
     .brand {
       display: flex;
       align-items: center;
       gap: 16px;
       margin-bottom: 12px;
     }
-
     .brand-logo-text {
       font-size: 2rem;
       font-weight: 900;
       color: var(--primary);
       letter-spacing: 0.5px;
       margin-right: 10px;
-      font-family: 'Segoe UI Black', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      user-select: text !important;
     }
-
     h1 {
       font-size: 1.6rem;
       margin: 0;
       color: var(--primary);
       font-weight: 700;
-      user-select: text !important;
     }
-
     h2 {
       font-size: 1.2rem;
       margin: 0 0 18px 0;
@@ -82,21 +61,16 @@
       font-weight: 600;
       border-bottom: 2px solid #d1e3f8;
       padding-bottom: 10px;
-      user-select: text !important;
     }
-
     .input-group {
       margin-bottom: 18px;
     }
-
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
       color: #1a1a1a;
-      user-select: text !important;
     }
-
     input[type="text"] {
       width: 100%;
       padding: 12px 14px;
@@ -106,21 +80,17 @@
       font-size: 1rem;
       transition: border-color 0.3s ease;
       font-family: var(--font-sans);
-      user-select: text !important;
     }
-
     input[type="text"]:focus {
       border-color: var(--accent);
       outline: none;
       box-shadow: 0 0 6px var(--accent);
     }
-
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
     }
-
     .btn-primary,
     .btn-secondary {
       padding: 12px 22px;
@@ -130,43 +100,35 @@
       cursor: pointer;
       transition: background-color 0.3s, box-shadow 0.3s;
       font-weight: 700;
-      user-select: none;
       font-family: var(--font-sans);
     }
-
     .btn-primary {
       background: var(--primary);
       color: var(--card);
       box-shadow: 0 4px 12px rgba(0, 77, 153, 0.3);
     }
-
     .btn-primary:hover,
     .btn-primary:focus {
       background: #003366;
       box-shadow: 0 6px 18px rgba(0, 51, 102, 0.5);
       outline: none;
     }
-
     .btn-secondary {
       background: #e2e8f0;
       color: #334155;
       margin-left: 14px;
       box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
     }
-
     .btn-secondary:hover,
     .btn-secondary:focus {
       background: #cbd5e1;
       color: #1e293b;
       outline: none;
     }
-
     .output-section {
       margin-top: 28px;
       position: relative;
-      user-select: text !important;
     }
-
     #outputArea {
       transition: max-height 0.4s ease-in-out;
       overflow: hidden;
@@ -174,7 +136,6 @@
       display: none;
       margin-top: 12px;
     }
-
     textarea {
       width: 100%;
       height: 400px;
@@ -187,9 +148,7 @@
       background: #f9fbfd;
       resize: none;
       line-height: 1.5;
-      user-select: text !important;
     }
-
     .btn-copy {
       position: absolute;
       top: 8px;
@@ -201,24 +160,20 @@
       font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
-      user-select: none;
       box-shadow: 0 3px 10px rgba(255, 127, 0, 0.5);
       transition: background-color 0.3s ease;
     }
-
     .btn-copy:hover,
     .btn-copy:focus {
       background: #cc6600;
       outline: none;
     }
-
     .btn-row {
       display: flex;
       justify-content: flex-start;
       align-items: center;
       margin-top: 20px;
     }
-
     .toast {
       position: fixed;
       bottom: 20px;
@@ -232,30 +187,23 @@
       transition: opacity 0.4s, transform 0.4s;
       transform: translateY(20px);
       font-family: var(--font-sans);
-      user-select: none;
       box-shadow: 0 4px 14px rgba(0, 77, 153, 0.3);
     }
-
     .toast.show {
       opacity: 1;
       transform: translateY(0);
     }
-
     .toast.success {
       background: var(--success);
     }
-
     .toast.error {
       background: var(--error);
     }
-
     .required::after {
       content: '*';
       color: var(--error);
       margin-left: 6px;
-      user-select: none;
     }
-
     .info-box {
       background: #e8f4f8;
       border-left: 5px solid var(--primary);
@@ -264,7 +212,6 @@
       border-radius: 6px;
       font-size: 1rem;
       color: #1e293b;
-      user-select: text !important;
       line-height: 1.4;
     }
   </style>
@@ -335,30 +282,13 @@
   <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
   <script>
-    // === Security deterrents - disable right-click and dev tools keys ===
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-      alert('Right-click is disabled on this page.');
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
-        (e.ctrlKey && ['U', 'S', 'P', 'A', 'C'].includes(e.key.toUpperCase()))
-      ) {
-        e.preventDefault();
-        alert('This action is disabled.');
-      }
-    });
-
     // Form submit handler
     document.getElementById('promptForm').addEventListener('submit', (e) => {
       e.preventDefault();
       generatePrompt();
     });
 
-    // Large master prompt string (truncated here for brevity)
+    // Master prompt text (truncated for brevity, replace with your full prompt)
     const COMPLETE_MASTER_PROMPT = `You are an elite Business Development AI assistant for Paramantra (Aldius Consulting Group Inc), a purpose-driven enterprise CRM provider founded March 12, 2008, headquartered in Charlestown, Massachusetts. Paramantra serves 80+ business verticals with 250+ integrated modules, specializing in companies with complex sales cycles—from cake makers to NASA suppliers, defense contractors, manufacturing operations, real estate enterprises, industrial distributors, and professional services.
 
 [... full prompt content omitted for brevity, use your full prompt here ...]
@@ -367,7 +297,6 @@ FINAL PHILOSOPHY REMINDER:
 
 You are not generating content to "close deals." You are creating communication that helps prospects explore whether Paramantra can support their goals. Every word should reflect dignity, respect, and genuine curiosity about their business. You are representing a company that believes ethical commerce is noble—that sales, marketing, and service deserve honor. This content should shift perception about what business development communication can be: thoughtful, researched, respectful, and genuinely helpful. If any part of your output feels pushy, salesy, or disrespectful—stop and rewrite. We are the change we want to see in this trade.`;
 
-    // Generate prompt function
     function generatePrompt() {
       const firstName = document.getElementById('firstName').value.trim();
       const lastName = document.getElementById('lastName').value.trim();
@@ -434,8 +363,34 @@ Generate all four deliverables now.`;
       showToast('Complete AI prompt generated successfully! Copy and paste into your AI tool (Claude, ChatGPT, Gemini, Perplexity, etc.)', 'success');
     }
 
-    // Show output area
     function openOutput() {
       const outputArea = document.getElementById('outputArea');
+      const toggleBtn = document.getElementById('toggleBtn');
       outputArea.style.display = 'block';
-      outputArea.style.max
+      outputArea.style.maxHeight = '600px';
+      toggleBtn.textContent = 'Hide Generated Prompt';
+      toggleBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    function togglePrompt() {
+      const outputArea = document.getElementById('outputArea');
+      const toggleBtn = document.getElementById('toggleBtn');
+      if (outputArea.style.display === 'block') {
+        outputArea.style.display = 'none';
+        outputArea.style.maxHeight = '0';
+        toggleBtn.textContent = 'Show Generated Prompt';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+      } else {
+        outputArea.style.display = 'block';
+        outputArea.style.maxHeight = '600px';
+        toggleBtn.textContent = 'Hide Generated Prompt';
+        toggleBtn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function copyPrompt() {
+      const promptText = document.getElementById('promptText');
+      promptText.select();
+      promptText.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand('copy');
+      showToast('Prompt copied to clipboard!', '
